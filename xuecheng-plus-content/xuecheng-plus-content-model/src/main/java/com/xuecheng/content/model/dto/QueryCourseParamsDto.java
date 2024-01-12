@@ -1,5 +1,6 @@
 package com.xuecheng.content.model.dto;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
@@ -14,6 +15,7 @@ import java.io.Serializable;
  * */
 @Data
 @ToString
+@ApiModel(value = "QueryCourseParamsDto",description = "课程查询条件模型类")
 public class QueryCourseParamsDto implements Serializable {
     //审核状态
     @ApiModelProperty(value = "审核状态")

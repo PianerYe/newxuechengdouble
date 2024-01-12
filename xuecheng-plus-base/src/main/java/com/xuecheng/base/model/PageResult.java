@@ -1,5 +1,6 @@
 package com.xuecheng.base.model;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 @Data
 @ToString
+@ApiModel(value = "PageResult",description = "分页查询结果模型类")
 public class PageResult<T> implements Serializable {
     // 数据列表
     @ApiModelProperty(value = "数据列表")

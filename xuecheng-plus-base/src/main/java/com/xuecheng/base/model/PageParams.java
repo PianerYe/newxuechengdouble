@@ -1,5 +1,6 @@
 package com.xuecheng.base.model;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
@@ -12,6 +13,7 @@ import lombok.ToString;
  */
 @Data
 @ToString
+@ApiModel(value = "PageParams",description = "分页查询参数")
 public class PageParams {
     //当前页码
     @ApiModelProperty(value = "页码")
