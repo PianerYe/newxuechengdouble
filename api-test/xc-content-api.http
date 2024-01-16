@@ -33,3 +33,26 @@ Content-Type: application/json
   "grade": "204001",
   "description": "java网络编程高级java网络编程高级java网络编程高级"
 }
+
+### 制造异常
+POST {{content_host}}/content/course
+Content-Type: application/json
+
+{
+  "charge": "201001",
+  "price": 101,
+  "originalPrice":100,
+  "qq": "22333",
+  "wechat": "223344",
+  "phone": "13333333",
+  "validDays": 365,
+  "mt": "1-1",
+  "st": "1-1-1",
+  "name": "",
+  "pic": "fdsd",
+  "teachmode": "200002",
+  "users": "初级人员",
+  "tags": "dsadasdasfasaasd",
+  "grade": "204001",
+  "description": "java网络编程高级java网络编程高级java网络编程高级"
+}

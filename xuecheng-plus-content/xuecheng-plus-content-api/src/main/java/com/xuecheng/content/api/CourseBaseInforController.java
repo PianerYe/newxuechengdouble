@@ -46,7 +46,7 @@ public class CourseBaseInforController {
 
         //获取到用户所属机构的id
         Long companyId = 1232141425L;
-
+//        int i = 1/0 ;
         CourseBaseInfoDto courseBaseInfoDto = courseBaseInfoService.createCourseBase(companyId, addCourseDto);
 
         return  courseBaseInfoDto;
