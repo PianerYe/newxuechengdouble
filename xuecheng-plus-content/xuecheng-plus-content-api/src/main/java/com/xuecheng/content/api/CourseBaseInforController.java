@@ -43,6 +43,10 @@ public class CourseBaseInforController {
     @ApiOperation("新增课程接口")
     @PostMapping("/course")
     public CourseBaseInfoDto createCourseBase(@RequestBody AddCourseDto addCourseDto){
+
+        //获取到用户所属机构的id
+        Long companyId = 1232141425L;
+
         return null;
     }
 }
