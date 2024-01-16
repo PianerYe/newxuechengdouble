@@ -6,6 +6,7 @@ import com.xuecheng.content.model.dto.AddCourseDto;
 import com.xuecheng.content.model.dto.CourseBaseInfoDto;
 import com.xuecheng.content.model.dto.QueryCourseParamsDto;
 import com.xuecheng.content.model.po.CourseBase;
+import com.xuecheng.content.model.po.CourseMarket;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
@@ -31,4 +32,7 @@ public interface CourseBaseInfoService {
      * */
     //新增课程
     public CourseBaseInfoDto createCourseBase(Long companyId,AddCourseDto addCourseDto);
+
+    //保存营销信息(存在则更新，不存在则添加)
+    public int saveCourseMarket(CourseMarket courseMarketNew);
 }

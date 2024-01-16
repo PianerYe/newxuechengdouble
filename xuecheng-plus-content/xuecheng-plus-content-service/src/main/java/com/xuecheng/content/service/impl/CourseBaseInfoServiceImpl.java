@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -39,6 +40,8 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     CourseMarketMapper courseMarketMapper;
     @Resource
     CourseCategoryMapper courseCategoryMapper;
+    @Resource
+    CourseBaseInfoService proxycourseBaseInfo;
 
     /**
      * 课程分页查询
@@ -81,6 +84,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
      * @param companyId 机构ID
      * @return 课程详细信息
      * */
+    @Transactional
     @Override
     public CourseBaseInfoDto createCourseBase(Long companyId, AddCourseDto dto) {
 
@@ -134,20 +138,24 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         }
         //向课程营销表course_market写入数据
         CourseMarket courseMarketNew = new CourseMarket();
+
         //将页面输入的数据拷贝到courseMarketNew
         BeanUtils.copyProperties(dto,courseMarketNew);
         //课程id
-        Long id = courseMarketNew.getId();
-        courseBaseNew.setId(id);
+        //课程id
+        Long id = courseBaseNew.getId();
+        courseMarketNew.setId(id);
         //保存营销信息
-        saveCourseMarket(courseMarketNew);
+        proxycourseBaseInfo.saveCourseMarket(courseMarketNew);
+//        saveCourseMarket(courseMarketNew);
         //从数据库查出课程的详细信息,包括两部分
         CourseBaseInfoDto courseBaseInfo = getCourseBaseInfo(id);
         return courseBaseInfo;
     }
 
+    @Transactional
     //单独写一个方法保存营销信息，逻辑：存在则更新，不存在则添加
-    private int saveCourseMarket(CourseMarket courseMarketNew){
+    public int saveCourseMarket(CourseMarket courseMarketNew){
         //参数的合法性校验
         String charge = courseMarketNew.getCharge();
         if (StringUtils.isEmpty(charge)){
