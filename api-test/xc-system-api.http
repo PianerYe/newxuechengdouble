@@ -1,0 +1,3 @@
+### 查询数字词典
+GET {{system_host}}/system/dictionary/all
+Content-Type: application/json

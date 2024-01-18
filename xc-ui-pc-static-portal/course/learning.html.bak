@@ -1042,10 +1042,10 @@
             videoObject : {
 				container: '#vdplay', //容器的ID或className
 				variable: 'player',//播放函数名称
-				poster:'/static/img/asset-video.png',//封面图片
+				poster: '/static/img/asset-video.png',//封面图片
 				//loaded: 'loadedHandler', //当播放器加载后执行的函数
                 //video:'http://file.51xuecheng.cn/video/1/f/1f229319d6fed3431d2f9d06193a433b/1f229319d6fed3431d2f9d06193a433b.mp4'
-				video:'http://file.51xuecheng.cn/video/a/4/a44a72aa1aab0395ae9d404035f224cd/a44a72aa1aab0395ae9d404035f224cd.mp4'												  
+				video: 'http://file.51xuecheng.cn/video/a/4/a44a72aa1aab0395ae9d404035f224cd/a44a72aa1aab0395ae9d404035f224cd.mp4'												  
 				// video: [//视频地址列表形式
 				// 	['http://file.51xuecheng.cn/video/3/a/3a5a861d1c745d05166132c47b44f9e4/3a5a861d1c745d05166132c47b44f9e4.mp4', 'video/mp4', '中文标清', 0]
 				// ]

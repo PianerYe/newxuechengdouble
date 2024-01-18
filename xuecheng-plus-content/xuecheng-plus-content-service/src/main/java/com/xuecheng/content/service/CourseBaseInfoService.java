@@ -4,6 +4,7 @@ import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
 import com.xuecheng.content.model.dto.AddCourseDto;
 import com.xuecheng.content.model.dto.CourseBaseInfoDto;
+import com.xuecheng.content.model.dto.EditCourseDto;
 import com.xuecheng.content.model.dto.QueryCourseParamsDto;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.model.po.CourseMarket;
@@ -35,4 +36,19 @@ public interface CourseBaseInfoService {
 
     //保存营销信息(存在则更新，不存在则添加)
     public int saveCourseMarket(CourseMarket courseMarketNew);
+
+    /**
+     * 根据课程的id查询课程的信息
+     * @param courseId 课程id
+     * @return 课程详细信息
+     * */
+    public CourseBaseInfoDto getCourseBaseInfo(Long courseId);
+
+    /**
+     * 修改课程
+     * @param companyId 机构id
+     * @param editCourseDto 修改课程的信息
+     * @return 课程详细信息
+     * */
+    public CourseBaseInfoDto updateCourseBase(Long companyId, EditCourseDto editCourseDto);
 }
