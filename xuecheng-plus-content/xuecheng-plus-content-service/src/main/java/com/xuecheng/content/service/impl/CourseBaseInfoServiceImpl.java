@@ -8,13 +8,12 @@ import com.xuecheng.base.model.PageResult;
 import com.xuecheng.content.mapper.CourseBaseMapper;
 import com.xuecheng.content.mapper.CourseCategoryMapper;
 import com.xuecheng.content.mapper.CourseMarketMapper;
-import com.xuecheng.content.model.dto.AddCourseDto;
-import com.xuecheng.content.model.dto.CourseBaseInfoDto;
-import com.xuecheng.content.model.dto.EditCourseDto;
-import com.xuecheng.content.model.dto.QueryCourseParamsDto;
+import com.xuecheng.content.mapper.TeachplanMapper;
+import com.xuecheng.content.model.dto.*;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.model.po.CourseCategory;
 import com.xuecheng.content.model.po.CourseMarket;
+import com.xuecheng.content.model.po.Teachplan;
 import com.xuecheng.content.service.CourseBaseInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -25,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author yepianer
@@ -44,6 +44,8 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     CourseCategoryMapper courseCategoryMapper;
     @Resource
     CourseBaseInfoService proxycourseBaseInfo;
+    @Resource
+    TeachplanMapper teachplanMapper;
 
     /**
      * 课程分页查询
@@ -52,8 +54,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
      * @return 查询结果
      * */
     @Override
-    public PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
-
+    public PageResult<CourseBaseDto> queryCourseBaseList(Long companyId, PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
         // 测试查询接口
         LambdaQueryWrapper<CourseBase> queryWrapper = new LambdaQueryWrapper<>();
         //拼接查询条件
@@ -63,22 +64,51 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         //根据课程审核状态
         queryWrapper.eq(StringUtils.isNotEmpty(queryCourseParamsDto.getAuditStatus()),
                 CourseBase::getAuditStatus,queryCourseParamsDto.getAuditStatus());
-        //todo:根据课程发布状态查询
-        queryWrapper.eq(StringUtils.isNotEmpty(queryCourseParamsDto.getPublishStatus()),
-                CourseBase::getStatus, queryCourseParamsDto.getPublishStatus());
-
+        //按课程发布状态查询
+        //根据培训机构的id拼装查询条件
+//        queryWrapper.eq(CourseBase::getCompanyId,companyId);
+        //分页参数
         Page<CourseBase> page = new Page<>(pageParams.getPageNo(), pageParams.getPageSize());
+        Page<CourseBaseDto> dtoPage = new Page<>(pageParams.getPageNo(), pageParams.getPageSize());
 
         //分页查询E page 分页参数, @Param("ew") Wrapper<T> queryWrapper 查询条件
         Page<CourseBase> pageResult = courseBaseMapper.selectPage(page,queryWrapper);
+        //对象拷贝
+        BeanUtils.copyProperties(page,dtoPage,"records");
         //数据
         List<CourseBase> items = pageResult.getRecords();
+        List<CourseBaseDto>list =items.stream().map((item)->{
+            CourseBaseDto courseBaseDto = new CourseBaseDto();
+            BeanUtils.copyProperties(item,courseBaseDto);
+            Long courseBaseDtoId = courseBaseDto.getId();
+            LambdaQueryWrapper<Teachplan> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(Teachplan::getCourseId,courseBaseDtoId)
+                    .eq(Teachplan::getGrade,"1");
+            //SELECT COUNT(1) FROM teachplan WHERE course_id = 25 AND grade = "1"
+            Integer integer = teachplanMapper.selectCount(wrapper);
+            courseBaseDto.setSubsectionNum(integer);
+            //查询是否收费免费
+            //select charge from course_market where id = courseBaseDtoId;
+            LambdaQueryWrapper<CourseMarket> wrapper2 = new LambdaQueryWrapper<>();
+            wrapper2.eq(CourseMarket::getId,courseBaseDtoId);
+            CourseMarket courseMarket = courseMarketMapper.selectOne(wrapper2);
+            String charge ;
+            if (courseMarket == null){
+                charge = null;
+            }else {
+                charge = courseMarket.getCharge();
+            }
+            courseBaseDto.setCharge(charge);
+
+            return courseBaseDto;
+        }).collect(Collectors.toList());
         //总记录数
         long total = pageResult.getTotal();
-        //准备返回数据 List<T> items, long counts, long page, long pageSize
-        PageResult<CourseBase> courseBasePageResult = new PageResult<>(items, total,pageParams.getPageNo(), pageParams.getPageSize());
 
-        return courseBasePageResult;
+        //准备返回数据 List<T> items, long counts, long page, long pageSize
+        PageResult<CourseBaseDto> courseBasePageResult = new PageResult<>(list, total,pageParams.getPageNo(), pageParams.getPageSize());
+
+        return  courseBasePageResult;
     }
 
     /**
