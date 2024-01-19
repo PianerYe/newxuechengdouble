@@ -60,3 +60,34 @@ Content-Type: application/json
 ### 根据课程id查询课程信息
 GET {{content_host}}/content/course/40
 Content-Type: application/json
+
+
+### 修改课程
+PUT {{content_host}}/content/course
+Content-Type: application/json
+
+{
+  "auditStatus": "202003",
+  "changeDate": "2024-01-19 12:40:39",
+  "charge": "201000",
+  "companyId": "1232141425",
+  "createDate": "2024-01-18 14:41:14",
+  "description": "java测试00120240118java测试00120240118",
+  "grade": "204001",
+  "id": "147",
+  "mt": "1-10",
+  "mtName": "研发管理",
+  "name": "java测试003",
+  "phone": "122222",
+  "pic": "",
+  "price": 0,
+  "qq": "122222",
+  "st": "1-10-2",
+  "stName": "软件设计",
+  "status": "203001",
+  "tags": "java测试003",
+  "teachmode": "200003",
+  "users": "java测试00120240118java测试00120240118java测试00120240118",
+  "validDays": 365,
+  "wechat": "122222"
+}
