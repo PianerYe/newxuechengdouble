@@ -290,7 +290,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         //更新营销信息
         CourseMarket courseMarketNew = new CourseMarket();
         BeanUtils.copyProperties(editCourseDto,courseMarketNew);
-        saveCourseMarket(courseMarketNew);
+        proxycourseBaseInfo.saveCourseMarket(courseMarketNew);
         //查询课程信息
         CourseBaseInfoDto courseBaseInfo = getCourseBaseInfo(courseId);
 
