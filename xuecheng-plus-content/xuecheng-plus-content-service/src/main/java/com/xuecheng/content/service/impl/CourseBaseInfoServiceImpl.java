@@ -49,12 +49,13 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
 
     /**
      * 课程分页查询
-     * @param pageParams 分页查询参数
+     *
+     * @param pageParams           分页查询参数
      * @param queryCourseParamsDto 查询条件
      * @return 查询结果
-     * */
+     */
     @Override
-    public PageResult<CourseBaseDto> queryCourseBaseList(Long companyId, PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
+    public PageResult<CourseBaseDto> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
         // 测试查询接口
         LambdaQueryWrapper<CourseBase> queryWrapper = new LambdaQueryWrapper<>();
         //拼接查询条件

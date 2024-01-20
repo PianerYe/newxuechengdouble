@@ -11,9 +11,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author yepianer
@@ -37,7 +34,7 @@ public class CourseBaseInforController {
         Long companyId = null;
 
         //subsectionNum  任务数   <div>{{scope.row.charge | chargeText}}</div> 是否付费
-        PageResult<CourseBaseDto> courseBasePageResult = courseBaseInfoService.queryCourseBaseList(companyId,pageParams, queryCourseParamsDto);
+        PageResult<CourseBaseDto> courseBasePageResult = courseBaseInfoService.queryCourseBaseList(pageParams, queryCourseParamsDto);
         return courseBasePageResult;
     }
     @ApiOperation("新增课程接口")
