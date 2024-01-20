@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.xuecheng.base.exception.XueChengPlusException;
 import com.xuecheng.content.mapper.TeachplanMapper;
+import com.xuecheng.content.mapper.TeachplanMediaMapper;
 import com.xuecheng.content.model.dto.SaveTeachplanDto;
 import com.xuecheng.content.model.dto.TeachplanDto;
 import com.xuecheng.content.model.po.Teachplan;
+import com.xuecheng.content.model.po.TeachplanMedia;
 import com.xuecheng.content.service.TeachplanService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -28,6 +30,8 @@ public class TeachplanServiceImpl implements TeachplanService {
 
     @Resource
     TeachplanMapper teachplanMapper;
+    @Resource
+    TeachplanMediaMapper teachplanMediaMapper;
     /**
      * 根据课程id查询课程计划
      * @param courseId 课程id
@@ -68,6 +72,7 @@ public class TeachplanServiceImpl implements TeachplanService {
         }
     }
 
+    @Transactional
     /**
      * 大/小章节的上移
      * */
@@ -98,6 +103,7 @@ public class TeachplanServiceImpl implements TeachplanService {
         }
     }
 
+    @Transactional
     /**
      * 大/小章节的下移
      * */
@@ -127,6 +133,33 @@ public class TeachplanServiceImpl implements TeachplanService {
             getUpdateOrderBy(teachplan1,orderby);
             //下移的大/小章节 +1
             getUpdateOrderBy(teachplan, orderby + 1);
+        }
+    }
+
+    /**
+     * 课程计划删除
+     * */
+    @Transactional
+    @Override
+    public void deleteTeachplan(Long id) {
+        //首先查询id为269的课程信息关联的子课程信息是否存在，如果存在无法删除
+//        Teachplan teachplan = teachplanMapper.selectById(courseId);
+        LambdaQueryWrapper<Teachplan> queryWrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<Teachplan> eq = queryWrapper.eq(Teachplan::getParentid, id);
+        Integer count = teachplanMapper.selectCount(queryWrapper);
+        if (count == 0){
+            //判断章节id是否和课程计划和媒体关联表关联，如果关联则删除关联表信息
+            LambdaQueryWrapper<TeachplanMedia> queryWrapper1 = new LambdaQueryWrapper<>();
+            queryWrapper1.eq(TeachplanMedia::getTeachplanId,id);
+            Integer count1 = teachplanMediaMapper.selectCount(queryWrapper1);
+            if (count1 != 0){
+                //删除关联表信息
+                teachplanMediaMapper.delete(queryWrapper1);
+            }
+            //删除子级信息
+            int i = teachplanMapper.deleteById(id);
+        }else {
+            XueChengPlusException.cast("课程计划信息还有子级信息，无法操作");
         }
     }
 

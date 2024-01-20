@@ -40,6 +40,12 @@ public class TeachplanController {
         teachplanService.saveTeachplan(teachplan);
     }
 
+    @ApiOperation("课程计划删除")
+    @DeleteMapping("/teachplan/{id}")
+    public void deleteTeachplan(@PathVariable Long id){
+        teachplanService.deleteTeachplan(id);
+    }
+
     @ApiOperation("大/小章节的上移")
     @PostMapping("/teachplan/moveup/{id}")
     public void moveupTeachplan(@PathVariable Long id){

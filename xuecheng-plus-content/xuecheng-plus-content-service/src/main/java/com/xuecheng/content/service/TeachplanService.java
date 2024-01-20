@@ -33,4 +33,9 @@ public interface TeachplanService {
      *大/小章节的下移
      * */
     public void movedownTeachplan(Long id);
+
+    /**
+     * 课程计划删除
+     * */
+    public void deleteTeachplan(Long id);
 }
