@@ -213,13 +213,13 @@
             company_stat:[],
             course_stat:{"s601001":"","s601002":"","s601003":""},
             qrcode:'',
-			payNo:''
+            payNo:''
 
         },
         methods: {
             //马上学习
             startLearning(){
-                
+                console.log(window.location)
                  if(String(window.location).indexOf("/coursepreview/")>0){
                     window.location.href="http://www.51xuecheng.cn/course/preview/learning.html?id="+this.courseId
                     return ;
@@ -267,7 +267,7 @@
               
            },
            startLearngin(){
-            window.location.href="http://www.51xuecheng.cn/course/learning.html?id="+this.courseId
+            window.location.href="http://www.51xuecheng.cn/course/preview/learning.html?id="+this.courseId
            },
             //学习报名
             addCourseTable(){
@@ -305,7 +305,7 @@
                 let activeUser= getActiveUser();
                 if(activeUser){
                     addChoosecourse(this.courseId).then((res) => {
-						if(res.learnStatus){
+                        if(res.learnStatus){
                         if(res.learnStatus == '702001'){//正常
                             //开始学习
                             this.startLearngin()
@@ -319,13 +319,13 @@
                         }
                     }
                     }).catch(error=>{
-                                if(error&&error.response.data.errMessage){
-                                    this.$message.error(error.response.data.errMessage)
-                                }else{
-                                    this.$message.error('出错了')
-                                }
-                               
-                            })
+                        if(error&&error.response.data.errMessage){
+                            this.$message.error(error.response.data.errMessage)
+                        }else{
+                            this.$message.error('出错了')
+                        }
+
+                    })
                 }else{
                     //弹出登录框架
                     showlogin()
@@ -336,21 +336,21 @@
                 let activeUser= getActiveUser();
                 if(activeUser){
                     querypayresult(this.payNo).then((res) => {
-						if(res.status){
-							if(res.status == '601002'){//支付成功
-							   this.$message.success('支付成功，可以去学习啦');
-							}else{
-								this.$message.error('请扫码支付，支付完成请不要重复支付。');
-							}
-                       }
+                        if(res.status){
+                            if(res.status == '601002'){//支付成功
+                                this.$message.success('支付成功，可以去学习啦');
+                            }else{
+                                this.$message.error('请扫码支付，支付完成请不要重复支付。');
+                            }
+                        }
                     }).catch(error=>{
-                                if(error&&error.response.data.errMessage){
-                                    this.$message.error(error.response.data.errMessage)
-                                }else{
-                                    this.$message.error('出错了')
-                                }
-                               
-                            })
+                        if(error&&error.response.data.errMessage){
+                            this.$message.error(error.response.data.errMessage)
+                        }else{
+                            this.$message.error('出错了')
+                        }
+
+                    })
                 }else{
                     //弹出登录框架
                     showlogin()
@@ -383,18 +383,17 @@
                     console.log(addOrderDto)
                     generatepaycode(addOrderDto).then((res) => {
                         if(res&&res.qrcode){
-							//console.log(res)
-							 this.payNo = res.payNo
+                            this.payNo = res.payNo
                             this.qrcode=res.qrcode
                         }
                     }).catch(error=>{
-                                if(error&&error.response.data.errMessage){
-                                    this.$message.error(error.response.data.errMessage)
-                                }else{
-                                    this.$message.error('出错了')
-                                }
-                               
-                            })
+                        if(error&&error.response.data.errMessage){
+                            this.$message.error(error.response.data.errMessage)
+                        }else{
+                            this.$message.error('出错了')
+                        }
+
+                    })
 
             },
             createOrder(){
@@ -428,7 +427,6 @@
            // alert(courseId)
 
         }
-
     })
 </script>
 </body>
