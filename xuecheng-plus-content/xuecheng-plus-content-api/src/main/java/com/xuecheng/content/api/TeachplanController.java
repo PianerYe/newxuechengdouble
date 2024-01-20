@@ -1,13 +1,12 @@
 package com.xuecheng.content.api;
 
+import com.xuecheng.content.model.dto.SaveTeachplanDto;
 import com.xuecheng.content.model.dto.TeachplanDto;
 import com.xuecheng.content.service.TeachplanService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -34,4 +33,22 @@ public class TeachplanController {
         return teachplanTree;
     }
 
+    //添加课程  http://localhost:8601/api/content/teachplan
+    @ApiOperation("课程计划创建或修改")
+    @PostMapping("/teachplan")
+    public void saveTeachplan(@RequestBody SaveTeachplanDto teachplan){
+        teachplanService.saveTeachplan(teachplan);
+    }
+
+    @ApiOperation("大/小章节的上移")
+    @PostMapping("/teachplan/moveup/{id}")
+    public void moveupTeachplan(@PathVariable Long id){
+        teachplanService.moveupTeachplan(id);
+    }
+
+    @ApiOperation("大/小章节的下移")
+    @PostMapping("/teachplan/movedown/{id}")
+    public void movedownTeachplan(@PathVariable Long id){
+        teachplanService.movedownTeachplan(id);
+    }
 }
