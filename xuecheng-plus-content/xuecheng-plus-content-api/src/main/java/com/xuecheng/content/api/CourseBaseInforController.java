@@ -64,4 +64,13 @@ public class CourseBaseInforController {
         CourseBaseInfoDto courseBaseInfoDto = courseBaseInfoService.updateCourseBase(companyId, editCourseDto);
         return courseBaseInfoDto;
     }
+
+    @ApiOperation("未提交状态的课程，进行删除")
+    @DeleteMapping("/course/{id}")
+    public void deleteCourse(@PathVariable Long id){
+        //获取到用户所属机构的id
+        Long companyId = 1232141425L;
+        courseBaseInfoService.deleteCourse(companyId,id);
+
+    }
 }

@@ -46,4 +46,9 @@ public interface CourseBaseInfoService {
      * @return 课程详细信息
      * */
     public CourseBaseInfoDto updateCourseBase(Long companyId, EditCourseDto editCourseDto);
+
+    /**
+     * 未提交状态的课程，进行删除
+     * */
+    public void deleteCourse(Long companyId, Long id);
 }
