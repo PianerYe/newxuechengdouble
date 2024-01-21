@@ -93,7 +93,7 @@ Content-Type: application/json
 }
 
 ### 课程计划查询
-GET {{content_host}}/content/teachplan/117/tree-nodes
+GET {{gateway_host}}/content/teachplan/117/tree-nodes
 Content-Type: application/json
 
 ### 修改老师
