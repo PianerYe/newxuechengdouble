@@ -6,12 +6,15 @@ import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
 import com.xuecheng.media.mapper.MediaFilesMapper;
 import com.xuecheng.media.model.dto.QueryMediaParamsDto;
+import com.xuecheng.media.model.dto.UploadFileParamsDto;
+import com.xuecheng.media.model.dto.UploadFileResultDto;
 import com.xuecheng.media.model.po.MediaFiles;
 import com.xuecheng.media.service.MediaFileService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -23,7 +26,7 @@ import java.util.List;
  @Service
 public class MediaFileServiceImpl implements MediaFileService {
 
-  @Autowired
+ @Resource
  MediaFilesMapper mediaFilesMapper;
 
  @Override
@@ -44,5 +47,10 @@ public class MediaFileServiceImpl implements MediaFileService {
   PageResult<MediaFiles> mediaListResult = new PageResult<>(list, total, pageParams.getPageNo(), pageParams.getPageSize());
   return mediaListResult;
 
+ }
+
+ @Override
+ public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath, String objectName) {
+  return null;
  }
 }
