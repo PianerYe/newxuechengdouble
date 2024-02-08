@@ -7,7 +7,7 @@ import lombok.ToString;
  * @author yepianer
  * @date 2023/7/26 23:54
  * @project_name yepianerxuecheng
- * @description
+ * @description 存储文件信息
  */
 @Data
 @ToString
