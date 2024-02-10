@@ -23,11 +23,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +47,8 @@ public class MediaFileServiceImpl implements MediaFileService {
  MediaFilesMapper mediaFilesMapper;
  @Autowired
  MinioClient minioClient;
+ @Resource
+ MediaFileService currentProxy;
  //存储普通文件
  @Value("${minio.bucket.files}")
  private String bucket_mediafiles;
@@ -102,9 +106,15 @@ public class MediaFileServiceImpl implements MediaFileService {
     XueChengPlusException.cast("上传文件失败");
   }
   //入库信息
+  MediaFiles mediaFiles = currentProxy.addMediaFilesToDb(companyId, fileMd5, uploadFileParamsDto, bucket_mediafiles, objectName);
+  if (mediaFiles == null){
+      XueChengPlusException.cast("文件上传后保存信息失败");
+  }
   //准备返回的对象
-  return null;
- }
+  UploadFileResultDto uploadFileResultDto = new UploadFileResultDto();
+  BeanUtils.copyProperties(mediaFiles,uploadFileResultDto);
+  return uploadFileResultDto;
+}
 
  //根据扩展名获取mimeType
  private String getMimeType(String extension) {
@@ -164,6 +174,48 @@ public class MediaFileServiceImpl implements MediaFileService {
    log.error("上传文件出错,bucket:{},objectName:{},错误信息:{}",bucket,objectName,e.getMessage());
   }
    return false;
+ }
+
+ /**
+  * 将文件信息保存到数据库
+  * */
+ @Transactional
+ public MediaFiles addMediaFilesToDb (Long companyId,String fileMd5,UploadFileParamsDto uploadFileParamsDto,String bucket,String objectName){
+   //将文件信息保存到数据库
+  MediaFiles mediaFiles = mediaFilesMapper.selectById(fileMd5);
+  if (mediaFiles == null){
+    mediaFiles = new MediaFiles();
+    BeanUtils.copyProperties(uploadFileParamsDto,mediaFiles);
+    //文件id
+    mediaFiles.setId(fileMd5);
+    mediaFiles.setCompanyId(companyId);
+    //桶
+    mediaFiles.setBucket(bucket);
+    //file_path
+    mediaFiles.setFilePath(objectName);
+    //file_id
+    mediaFiles.setFileId(fileMd5);
+    //url
+    mediaFiles.setUrl("/"+ bucket + "/" + objectName);
+    //上传时间
+    mediaFiles.setCreateDate(LocalDateTime.now());
+    //状态
+    mediaFiles.setStatus("1");
+    //审核状态
+    mediaFiles.setAuditStatus("002003");
+    //插入数据库
+    int insert = mediaFilesMapper.insert(mediaFiles);
+    if (insert <= 0){
+     log.debug("向数据库保存文件信息失败,bucket:{},objectName:{}",bucket,objectName);
+     return null;
+    } //记录待处理的任务
+//    //minmeType判断如果是avi视频写入待处理任务
+//    addWaitingTask(mediaFiles);
+//    //向 MediaProcess插入记录
+    return mediaFiles;
+
+  }
+  return mediaFiles;
  }
 
 
