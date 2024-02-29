@@ -21,19 +21,20 @@ public class BigFileTest {
     @Test
     public void testChunk() throws IOException {
         //源文件
-        File sourFile = new File("D:\\斗鱼视频\\【天涯明月刀】默默123444的精彩时刻 20211129 00点场.mp4");
+//        File sourFile = new File("D:\\斗鱼视频\\【天涯明月刀】默默123444的精彩时刻 20211129 00点场.mp4");
+        File sourFile = new File("C:\\Users\\yxkf\\Pictures\\视频项目\\meeting_01.mp4");
         //分块文件存储路径
         String chunkFilePath = "E:\\video\\chunk\\";
         //分块文件的大小
         int chunkSize = 1024* 1024 * 50;
         //分块文件个数
-        int chunkNum = (int) Math.ceil(sourFile.length() * 1.0 / chunkSize);
-        //使用流从源文件读数据，向分块文件中写数据
-        RandomAccessFile raf_r = new RandomAccessFile(sourFile, "r");
-        //缓存区
-        byte[] bytes = new byte[1024];
-        for (int i = 0; i < chunkNum; i++) {
-            File chunkFile = new File(chunkFilePath + i);
+            int chunkNum = (int) Math.ceil(sourFile.length() * 1.0 / chunkSize);
+            //使用流从源文件读数据，向分块文件中写数据
+            RandomAccessFile raf_r = new RandomAccessFile(sourFile, "r");
+            //缓存区
+            byte[] bytes = new byte[1024];
+            for (int i = 0; i < chunkNum; i++) {
+                File chunkFile = new File(chunkFilePath + i);
             //分块文件的写入流
             RandomAccessFile raf_rw = new RandomAccessFile(chunkFile, "rw");
             int len = -1;
@@ -55,7 +56,8 @@ public class BigFileTest {
         //块文件路径
         File chunkFolder = new File("E:\\video\\chunk\\");
         //源文件
-        File sourFile = new File("D:\\斗鱼视频\\【天涯明月刀】默默123444的精彩时刻 20211129 00点场.mp4");
+//        File sourFile = new File("D:\\斗鱼视频\\【天涯明月刀】默默123444的精彩时刻 20211129 00点场.mp4");
+        File sourFile = new File("C:\\Users\\yxkf\\Pictures\\视频项目\\meeting_01.mp4");
         //合并后的文件
         File mergeFile = new File("E:\\video\\merge\\1.mp4");
 

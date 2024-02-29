@@ -29,8 +29,8 @@ public class MinioTest {
 
     static MinioClient minioClient =
             MinioClient.builder()
-                    .endpoint("http://192.168.255.100:9000")
-                    .credentials("yepianer", "yxy123456...")
+                    .endpoint("http://192.168.240.132:9000")
+                    .credentials("admin", "admin123456")
                     .build();
 
     @Test
@@ -108,7 +108,7 @@ public class MinioTest {
     @Test
     public void uploadChunk() throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
 
-        for (int i = 0; i < 19; i++) {
+        for (int i = 0; i < 2; i++) {
             // E:\video\chunk\
             //上传文件的参数信息
             UploadObjectArgs uploadObjectArgs = UploadObjectArgs.builder().
@@ -136,7 +136,7 @@ public class MinioTest {
 //            sources.add(composeSource);
 //        }
 
-        List<ComposeSource> sources = Stream.iterate(0, i -> ++i).limit(19).map(i ->
+        List<ComposeSource> sources = Stream.iterate(0, i -> ++i).limit(2).map(i ->
                 ComposeSource.builder().bucket("testbucket")
                         .object("chunk/" + i)
                         .build()).collect(Collectors.toList());

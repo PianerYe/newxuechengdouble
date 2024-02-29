@@ -4,7 +4,8 @@ spring:
     name: media-api
   cloud:
     nacos:
-      server-addr: 192.168.255.100:8848
+#      server-addr: 192.168.255.100:8848
+      server-addr: 192.168.240.132:8848
       discovery:
         namespace: devyepianer
         group: yepianerxuecheng
