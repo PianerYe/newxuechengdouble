@@ -27,4 +27,12 @@ spring:
             refresh: true
   profiles:
     active: dev
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+server:
+  tomcat:
+    max-swallow-size: 500MB
+
 
