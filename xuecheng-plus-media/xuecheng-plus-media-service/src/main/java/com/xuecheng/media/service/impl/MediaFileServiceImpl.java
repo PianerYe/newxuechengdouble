@@ -272,20 +272,33 @@ public class MediaFileServiceImpl implements MediaFileService {
     @Override
     @Transactional
     public RestResponse<Boolean> checkChunk(String fileMd5, int chunkIndex) {
+
+        //先查询文件的总的数据库是否存在
+        LambdaQueryWrapper<MediaFiles> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(MediaFiles::getId,fileMd5);
+        MediaFiles mediaFiles = mediaFilesMapper.selectOne(queryWrapper);
+
+        if (mediaFiles != null && "1".equals(mediaFiles.getStatus())){
+            //数据库存在
+            return RestResponse.success(true);
+        }
+
         //分块存储路径:md5前两位为两个目录,chunk存储分块文件
         //根据md5得到分块文件的路径
         String chunkFileFolderPath = getChunkFileFolderPath(fileMd5);
         //得到分块文件路径
         //判断数据库是否存在
         String fileId = fileMd5 + chunkIndex;
-        LambdaQueryWrapper<MediaChuck> queryWrapper = new LambdaQueryWrapper();
-        queryWrapper.eq(MediaChuck::getFileId,fileId);
-        MediaChuck mediaChuck = mediaChuckMapper.selectOne(queryWrapper);
+        LambdaQueryWrapper<MediaChuck> queryWrapper1 = new LambdaQueryWrapper();
+        queryWrapper1.eq(MediaChuck::getFileId,fileId);
+        MediaChuck mediaChuck = mediaChuckMapper.selectOne(queryWrapper1);
+
         if (mediaChuck != null && "1".equals(mediaChuck.getStatus())){
             //数据库存在
             return RestResponse.success(true);
         }
-        //如果数据库不存在
+
+        //如果文件数据库不存在
         //如果数不存在再查询Minio
         GetObjectArgs getObjectArgs = GetObjectArgs.builder()
                 .bucket(bucket_video)
