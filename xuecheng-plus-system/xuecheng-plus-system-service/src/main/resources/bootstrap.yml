@@ -4,8 +4,8 @@ spring:
   profiles:
     active: dev
   nacos:
-#    server-addr: 192.168.255.100:8848
-    server-addr: 192.168.240.132:8848
+    server-addr: 192.168.75.129:8848
+#    server-addr: 192.168.240.132:8848
     config: # 配置文件的相关信息
       namespace: devyepianer
       group: yepianerxuecheng

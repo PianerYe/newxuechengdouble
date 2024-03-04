@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "SET NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
     "serve-prod": "vue-cli-service serve --mode prod",
     "build": "vue-cli-service build",
     "build-prod": "vue-cli-service build --mode prod",
