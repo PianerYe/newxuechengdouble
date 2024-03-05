@@ -9,12 +9,14 @@ import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
 import com.xuecheng.media.mapper.MediaChuckMapper;
 import com.xuecheng.media.mapper.MediaFilesMapper;
+import com.xuecheng.media.mapper.MediaProcessMapper;
 import com.xuecheng.media.model.dto.QueryMediaParamsDto;
 import com.xuecheng.media.model.dto.RestResponse;
 import com.xuecheng.media.model.dto.UploadFileParamsDto;
 import com.xuecheng.media.model.dto.UploadFileResultDto;
 import com.xuecheng.media.model.po.MediaChuck;
 import com.xuecheng.media.model.po.MediaFiles;
+import com.xuecheng.media.model.po.MediaProcess;
 import com.xuecheng.media.service.MediaFileService;
 import io.minio.*;
 import io.minio.messages.DeleteError;
@@ -51,7 +53,7 @@ public class MediaFileServiceImpl implements MediaFileService {
 
  @Resource
  MediaFilesMapper mediaFilesMapper;
- @Autowired
+ @Resource
  MinioClient minioClient;
  @Resource
  MediaFileService currentProxy;
@@ -63,6 +65,8 @@ public class MediaFileServiceImpl implements MediaFileService {
  //存储视频
  @Value(("${minio.bucket.videofiles}"))
  private String bucket_video;
+ @Resource
+ MediaProcessMapper mediaProcessMapper;
 
  @Override
  public PageResult<MediaFiles> queryMediaFiels(Long companyId,PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto) {
@@ -130,7 +134,7 @@ public class MediaFileServiceImpl implements MediaFileService {
     extension = "";
   }
   //通过扩展名得到媒体资源类型 mimeType
-  ContentInfo extensionMatch = ContentInfoUtil.findMimeTypeMatch(extension);
+  ContentInfo extensionMatch = ContentInfoUtil.findExtensionMatch(extension);
   String mimeType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
   if (extensionMatch != null){
    mimeType = extensionMatch.getMimeType();
@@ -217,9 +221,9 @@ public class MediaFileServiceImpl implements MediaFileService {
      log.debug("向数据库保存文件信息失败,bucket:{},objectName:{}",bucket,objectName);
      return null;
     } //记录待处理的任务
-//    //minmeType判断如果是avi视频写入待处理任务
-//    addWaitingTask(mediaFiles);
-//    //向 MediaProcess插入记录
+    //minmeType判断如果是avi视频写入待处理任务
+    addWaitingTask(mediaFiles);
+    //向 MediaProcess插入记录
     return mediaFiles;
 
   }
@@ -510,6 +514,28 @@ public class MediaFileServiceImpl implements MediaFileService {
         queryWrapper.eq(MediaChuck::getFilename,fileMd5).eq(MediaChuck::getStatus,"1");
         int i = mediaChuckMapper.delete(queryWrapper);
         return i;
+    }
+
+    /**
+     * 添加待处理任务
+     * */
+    private void addWaitingTask(MediaFiles mediaFiles){
+        //获取文件的mimeType
+        String filename = mediaFiles.getFilename();
+        //文件扩展名
+        String extension = filename.substring(filename.lastIndexOf("."));
+        String mimeType = getMimeType(extension);
+        if (mimeType.equals("video/x-msvideo")){//如果是avi写入待处理表
+            MediaProcess mediaProcess = new MediaProcess();
+            BeanUtils.copyProperties(mediaFiles,mediaProcess);
+            //状态是未处理
+            mediaProcess.setStatus("1");//未处理
+            mediaProcess.setCreateDate(LocalDateTime.now());
+            mediaProcess.setFailCount(0);//失败默认0
+            mediaProcess.setUrl(null);
+            mediaProcessMapper.insert(mediaProcess);
+        }
+        //
     }
 
 
