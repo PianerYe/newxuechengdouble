@@ -40,7 +40,13 @@ public interface TeachplanService {
      * */
     public void deleteTeachplan(Long id);
 
+    /**
+     * 教学计划绑定媒资
+     * */
     public void associationMedia(BindTeachplanMediaDto bindTeachplanMediaDto);
 
+    /**
+     * 教学计划解除绑定媒资
+     * */
     public void deleteWithAssociationMedia(String teachPlanId, String mediaId);
 }

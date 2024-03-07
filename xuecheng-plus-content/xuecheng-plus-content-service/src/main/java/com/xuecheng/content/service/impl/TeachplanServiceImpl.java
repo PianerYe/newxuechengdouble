@@ -167,7 +167,7 @@ public class TeachplanServiceImpl implements TeachplanService {
 
     @Override
     public void associationMedia(BindTeachplanMediaDto bindTeachplanMediaDto) {
-//教学计划id
+        //教学计划id
         Long teachplanId = bindTeachplanMediaDto.getTeachplanId();
         Teachplan teachplan = teachplanMapper.selectById(teachplanId);
         if(teachplan==null){
