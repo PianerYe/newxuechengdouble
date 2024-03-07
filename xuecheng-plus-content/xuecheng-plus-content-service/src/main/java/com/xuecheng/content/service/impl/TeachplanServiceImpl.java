@@ -165,6 +165,9 @@ public class TeachplanServiceImpl implements TeachplanService {
         }
     }
 
+    /**
+     * 绑定媒资
+     * */
     @Override
     public void associationMedia(BindTeachplanMediaDto bindTeachplanMediaDto) {
         //教学计划id
@@ -196,6 +199,9 @@ public class TeachplanServiceImpl implements TeachplanService {
         teachplanMediaMapper.insert(teachplanMedia);
     }
 
+    /**
+     * 解绑媒资
+     * */
     @Override
     public void deleteWithAssociationMedia(String teachPlanId, String mediaId) {
         if (mediaId == null){
