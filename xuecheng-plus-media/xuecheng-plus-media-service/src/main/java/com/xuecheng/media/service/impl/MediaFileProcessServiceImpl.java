@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.pqc.crypto.newhope.NHSecretKeyProcessor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -41,6 +42,7 @@ public class MediaFileProcessServiceImpl implements MediaFileProcessService {
         return mediaProcesses;
     }
 
+    //实现如下
     @Override
     public boolean startTask(long id) {
         int result = mediaProcessMapper.startTask(id);
@@ -68,7 +70,7 @@ public class MediaFileProcessServiceImpl implements MediaFileProcessService {
                     MediaProcess mediaProcess_u = new MediaProcess();
                     mediaProcess_u.setStatus("3");
                     mediaProcess_u.setFailCount(mediaProcess.getFailCount()+1);
-                    mediaProcess_u.setErrormsg(errorMsg);
+                    mediaProcess_u.setErrormsg(errorMsg.substring(0,100));
             mediaProcessMapper.update(mediaProcess_u,queryWrapper);
             log.debug("更新任务处理状态为失败，任务信息:{}",mediaProcess_u);
             return;
@@ -87,6 +89,8 @@ public class MediaFileProcessServiceImpl implements MediaFileProcessService {
         //将MediaProcess表记录插入到MediaProcessHistory表中
         MediaProcessHistory mediaProcessHistory = new MediaProcessHistory();
         BeanUtils.copyProperties(mediaProcess,mediaProcessHistory);
+        //由于没设置id会导致报错，要么设置自增，要么就默认从原先的地方取出
+//        mediaProcess.setId(mediaProcessHistory.getId());
         mediaProcessHistoryMapper.insert(mediaProcessHistory);
         //从MediaProcess删除当前任务
         mediaProcessMapper.deleteById(taskId);

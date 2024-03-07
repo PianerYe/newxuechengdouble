@@ -16,6 +16,11 @@ public interface MediaFileProcessService {
 
     public List<MediaProcess> selectListByShardIndex(@Param("shardTotal") int shardTotal, @Param("shardIndex") int shardIndex, @Param("count") int count);
 
+    /**
+     * 开启一个任务
+     * @param id 任务id
+     * @return 更新记录数
+     * */
     public boolean startTask(@Param("id") long id);
 
     public void saveProcessFinsihStatus(Long taskId,String status,String fileID,String url,String errorMsg);

@@ -43,20 +43,20 @@ public class Mp4VideoUtil extends VideoUtil {
         commend.add("-i");
 //        commend.add("D:\\BaiduNetdiskDownload\\test1.avi");
         commend.add(video_path);
-        commend.add("-c:v");
-        commend.add("libx264");
+        commend.add("-c:v");// 视频编码器参数标志
+        commend.add("libx264"); // 使用 libx264 编码器进行视频编码
         commend.add("-y");//覆盖输出文件
-        commend.add("-s");
-        commend.add("1280x720");
-        commend.add("-pix_fmt");
-        commend.add("yuv420p");
-        commend.add("-b:a");
-        commend.add("63k");
-        commend.add("-b:v");
-        commend.add("753k");
-        commend.add("-r");
-        commend.add("18");
-        commend.add(mp4folder_path  + mp4_name );
+        commend.add("-s");// 设置输出视频分辨率
+        commend.add("1280x720");// 输出视频分辨率为 1280x720
+        commend.add("-pix_fmt");// 设置像素格式参数标志
+        commend.add("yuv420p");// 使用 yuv420p 像素格式
+        commend.add("-b:a");// 音频比特率参数标志
+        commend.add("63k");// 设置音频比特率为 63k
+        commend.add("-b:v");// 视频比特率参数标志
+        commend.add("753k");// 设置视频比特率为 753k
+        commend.add("-r");// 视频帧率参数标志
+        commend.add("18");// 设置视频帧率为 18 帧/秒
+        commend.add(mp4folder_path  + mp4_name );// 输出的 MP4 文件路径
 //        commend.add(mp4folder_path);
         String outstring = null;
         try {
