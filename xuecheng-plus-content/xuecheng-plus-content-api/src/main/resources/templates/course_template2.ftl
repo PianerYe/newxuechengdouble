@@ -24,46 +24,21 @@
         <div class="banner-bg"></div>
         <div class="banner-info">
             <div class="banner-left">
-                <p>${model.courseBase.mtName!''}<span>\ ${model.courseBase.stName!''}</span></p>
-                <p class="tit">${model.courseBase.name}</p>
-                <p class="pic">
-                    <#if model.courseBase.charge=='201000'>
-                        <span class="new-pic">免费</span>
-                    <#else>
-                        <span class="new-pic">特惠价格￥${model.courseBase.price!''}</span>
-                        <span class="old-pic">原价￥${model.courseBase.originalPrice!''}</span>
-                    </#if>
-                </p>
+                <p>课程 <span>\ 编程入门</span></p>
+                <p class="tit">程序语言设计</p>
+                <p class="pic"><span class="new-pic">特惠价格￥999</span> <span class="old-pic">原价￥1999</span></p>
                 <p class="info">
                     <a href="#" @click.prevent="startLearning()">马上学习</a>
-                    <span><em>难度等级</em>
-                <#if model.courseBase.grade=='204001'>
-                    初级
-                <#elseif model.courseBase.grade=='204002'>
-                    中级
-                <#elseif model.courseBase.grade=='204003'>
-                    高级
-                </#if>
-                </span>
+                    <span><em>难度等级</em>中级</span>
                     <span><em>课程时长</em>2小时27分</span>
                     <span><em>评分</em>4.7分</span>
-                    <span><em>授课模式</em>
-                 <#if model.courseBase.teachmode=='200002'>
-                     录播
-                 <#elseif model.courseBase.teachmode=='200003'>
-                     直播
-                 </#if>
-                </span>
+                    <span><em>授课模式</em>录播</span>
                 </p>
             </div>
             <div class="banner-rit">
                 <p>
-                  <a href="http://www.51xuecheng.cn/course/preview/learning.html?id=${model.courseBase.id}" target="_blank">
-                  <#if model.courseBase.pic??>
-                      <img src="http://file.51xuecheng.cn${model.courseBase.pic}" alt="" width="270" height="156">
-                  <#else>
-                      <img src="/static/img/widget-video.png" alt="" width="270" height="156">
-                  </#if>
+                  <a href="http://www.51xuecheng.cn/course/preview/learning.html?id=82" target="_blank">
+                  <img src="/static/img/widget-video.png" alt="">
                   </a>
                 </p>
                 <p class="vid-act"><span> <i class="i-heart"></i>收藏 23 </span> <span>分享 <i class="i-weixin"></i><i class="i-qq"></i></span></p>
@@ -97,7 +72,7 @@
                                 <div class="title"><span>适用人群</span></div>
                                 <div class="cont cktop">
                                     <div >
-                                        <p>${model.courseBase.users!""}</p>
+                                        <p>本课程假设学生熟悉大多数入门课程所涉及的程序，但它被明确设计成不是一门特别高级的课程。</p>
                                     </div>
                                     <!--<span class="on-off">更多 <i class="i-chevron-bot"></i></span>-->
                                 </div>
@@ -119,11 +94,11 @@
                                 </div>
 
                             </div>
-                            <div class="content-com about">
+                          <div class="content-com about">
                             <div class="title"><span>课程介绍</span></div>
                             <div class="cont cktop">
                               <div >
-                                <p>${model.courseBase.description!""}</p>
+                                <p>本课程假设学生熟悉大多数入门课程所涉及的程序，但它被明确设计成不是一门特别高级的课程。学生应该熟悉变量，条件语句，数组，链表，栈，和递归（递归算法将审查和扩展），和一个接口和实现之间的区别。学生应该渴望用新的语言编写程序。本课程C部分分析了面向对象的基本概念和对比他们的其他语言，用java或密切相关的语言如此熟悉（例如，C #）可能有助于C部分，但它是没有必要的作业。本课程是基于专为第二和第三年本科生设计的课程：不是第一个计算机科学课程，但不是一个高级课程。因此，它当然不会涵盖在编程语言的美丽世界的一切，但它是一个坚实的介绍。它的目的是大开眼界和迷人的学习者寻求“第三或第四编程课程”，并为有更多的经验，谁正在寻找一个明确和精确的编程语言基础的学习者。课程中的作业设计是具有挑战性的，但课程内容需要你所需要的一切。</p>
                               </div>
                               <!--<span class="on-off">更多 <i class="i-chevron-bot"></i></span>-->
                             </div>
@@ -173,19 +148,7 @@
                 <div class="article-cont-catalog">
                     <div class="article-left-box">
                         <div class="content">
-                            <#list model.teachplans as firstNode>
-                                <div class="item">
-                                    <div class="title act"><i class="i-chevron-top"></i>${firstNode.pname}<span class="time">x小时</span></div>
-                                    <div class="drop-down" style="height: 260px;">
-                                        <ul class="list-box">
-                                            <#list firstNode.teachPlanTreeNodes as secondNode>
-                                                <li><a href="http://www.51xuecheng.cn/course/preview/learning.html?id=${model.courseBase.id}& =${secondNode.teachplanMedia.teachplanId!''}" target="_blank">${secondNode.pname}</a></li>
-                                            </#list>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </#list>
-                            <#--<div class="item">
+                            <div class="item">
                                 <div class="title act"><i class="i-chevron-top"></i>第一阶段 HTTP协议基础详解<span class="time">8小时</span></div>
                                 <div class="about">使用Java消息中间件处理异步消息成为了分布式系统中的必修课，通过本门课程可以深入浅出的学习如何在Java中使用消息中间件并且一步一步打造更优雅的最佳实践方案。</div>
                                 <div class="drop-down" style="height: 260px;">
@@ -198,7 +161,7 @@
                                         <li>阶段测试</li>
                                     </ul>
                                 </div>
-                            </div>-->
+                            </div>
                             <div class="item">
                                 <div class="title"><i class="i-chevron-bot"></i>第二阶段 HTTP协议基础详解<span class="time">8小时</span></div>
                                 <div class="about">使用Java消息中间件处理异步消息成为了分布式系统中的必修课，通过本门课程可以深入浅出的学习如何在Java中使用消息中间件并且一步一步打造更优雅的最佳实践方案。</div>
@@ -575,7 +538,7 @@
         <div class="mask"></div>
         <!--欢迎访问课程弹窗- start -->
         <div class="popup-course-box">
-            <div class="title"> ${model.courseBase.name} <span class="close-popup-course-box">×</span></div>
+            <div class="title">Java编程思想 <span class="close-popup-course-box">×</span></div>
             <div class="content">
                 <p>欢迎学习本课程，本课程免费您可以立即学习，也可加入我的课程表享受更优质的服务。</p>
                 <p><a href="#" @click.prevent="addCourseTable()">加入我的课程表</a>  <a href="#" @click.prevent="startLearngin()">立即学习</a></p>
@@ -586,18 +549,18 @@
         <div class="mask"></div>
         <!--支付弹窗- start -->
         <div class="popup-pay-box">
-            <div class="title">${model.courseBase.name} <span class="close-popup-pay-box">×</span></div>
+            <div class="title">Java编程思想 <span class="close-popup-pay-box">×</span></div>
             <div class="content">
                 <img :src="qrcode" width="200" height="200" alt="请点击支付宝支付按钮，并完成扫码支付。"/>
                
                 <div class="info">
-                    <p class="info-tit">${model.courseBase.name} <span>课程有效期:${model.courseBase.validDays}天</span></p>
-                    <p class="info-pic">课程价格 : <span>￥${model.courseBase.originalPrice!''}元</span></p>
-                    <p class="info-new-pic">优惠价格 : <span>￥${model.courseBase.price!''}元</span></p>
+                    <p class="info-tit">Java编程思想 <span>课程有效期:365天</span></p>
+                    <p class="info-pic">课程价格 : <span>￥199</span></p>
+                    <p class="info-new-pic">优惠价格 : <span>￥99</span></p>
                 </div>
             </div>
             <div class="fact-pic">
-                实际支付: <span>￥${model.courseBase.price!''}元</span></div>
+                实际支付: <span>￥99</span></div>
             <div class="go-pay"><a href="#" @click.prevent="wxPay()">微信支付</a><a href="#" @click.prevent="aliPay()">支付宝支付</a><a href="#" @click.prevent="querypayresult()">支付完成</a><a href="#" @click.prevent="startLearngin()">试学</a></div>
         </div>
         <!--支付弹窗- end -->
@@ -610,6 +573,6 @@
 <!--#include virtual="/include/footer.html"-->
 <!--底部版权-->
 </div>
-<script>var courseId = "${model.courseBase.id}";var courseCharge = "${model.courseBase.charge}"</script>
+<script>var courseId = "2";var courseCharge = "201001"</script>
 <!--#include virtual="/include/course_detail_dynamic.html"-->
 </body>
