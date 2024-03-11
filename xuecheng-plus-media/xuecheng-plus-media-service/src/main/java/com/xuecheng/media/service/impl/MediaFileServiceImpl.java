@@ -194,7 +194,13 @@ public class MediaFileServiceImpl implements MediaFileService {
    return false;
  }
 
- /**
+    @Override
+    public MediaFiles getFileById(String mediaId) {
+        MediaFiles mediaFiles = mediaFilesMapper.selectById(mediaId);
+        return mediaFiles;
+    }
+
+    /**
   * 将文件信息保存到数据库
   * */
  @Transactional
