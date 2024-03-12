@@ -84,6 +84,6 @@ public interface MediaFileService {
  public boolean addMediaFilesToMinIO(String localFilePath,String mimeType,
                                      String bucket, String objectName);
 
- //查询文件信息
+//获取文件
  public MediaFiles getFileById(String mediaId);
 }
