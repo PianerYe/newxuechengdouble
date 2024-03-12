@@ -79,7 +79,6 @@ public class MediaFileProcessServiceImpl implements MediaFileProcessService {
         //文件表记录
         MediaFiles mediaFiles = mediaFilesMapper.selectById(fileId);
         //更新media_file表中的url
-        mediaFiles.setUrl(url);
         mediaFilesMapper.updateById(mediaFiles);
         //更新MediaProcess表的状态
         mediaProcess.setStatus("2");

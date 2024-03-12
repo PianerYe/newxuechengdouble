@@ -160,6 +160,7 @@ public class VideoTask {
                     }
                     //mp4文件的url
                     String url = getFilePathByMd5(fileId, ".mp4");
+                    url = "/" + bucket + "/" + url;
 
                     //保存任务的状态为成功
                     mediaFileProcessService.saveProcessFinsihStatus(taskId, "2", fileId, url, null);
