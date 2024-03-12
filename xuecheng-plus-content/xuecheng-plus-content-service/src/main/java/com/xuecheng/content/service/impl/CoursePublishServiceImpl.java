@@ -55,6 +55,12 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     CourseBaseInfoService courseBaseInfoService;
     @Resource
     TeachplanService teachplanService;
+    @Resource
+    CourseMarketMapper courseMarketMapper;
+    @Resource
+    CoursePublishPreMapper coursePublishPreMapper;
+    @Resource
+    CourseBaseMapper courseBaseMapper;
 
 
 
@@ -70,7 +76,65 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         return coursePreviewDto;
     }
 
+    @Override
+    public void commitAudit(Long companyId, Long courseId) {
+        CourseBaseInfoDto courseBaseInfo = courseBaseInfoService.getCourseBaseInfo(courseId);
+        if (courseBaseInfo == null) {
+            XueChengPlusException.cast("课程找不到");
+        }
+        //审核状态
+        String auditStatus = courseBaseInfo.getAuditStatus();
 
+        //如果课程的审核状态为已提交，则不允许提交
+        if ("202003".equals(auditStatus)) {
+            XueChengPlusException.cast("课程已提交请等待审核");
+        }
+        //本机构只能提交本机构的课程
+        //todo
+        if (companyId.longValue() != courseBaseInfo.getCompanyId().longValue()) {
+            XueChengPlusException.cast("提交课程机构和课程所属机构不相符，审核被拒绝");
+        }
+
+        //课程的图片、计划信息没有填写也不允许提交
+        String pic = courseBaseInfo.getPic();
+        if (StringUtil.isEmpty(pic)) {
+            XueChengPlusException.cast("请上传课程图片");
+        }
+        //查询课程计划
+        List<TeachplanDto> teachplanTree = teachplanService.findTeachplanTree(courseId);
+        if (teachplanTree == null || teachplanTree.size() == 0) {
+            XueChengPlusException.cast("请编写课程计划");
+        }
+        //查询到课程的基本信息，营销信息，计划等信息插入到课程计划表
+        CoursePublishPre coursePublishPre = new CoursePublishPre();
+        BeanUtils.copyProperties(courseBaseInfo, coursePublishPre);
+        //设置机构ID
+        coursePublishPre.setCompanyId(companyId);
+        //营销信息
+        CourseMarket courseMarket = courseMarketMapper.selectById(courseId);
+        //转json
+        String courseMarketJson = JSON.toJSONString(courseMarket);
+        coursePublishPre.setMarket(courseMarketJson);
+        //计划信息
+        String teachplanTreeJson = JSON.toJSONString(teachplanTree);
+        coursePublishPre.setTeachplan(teachplanTreeJson);
+        //状态为已提交
+        coursePublishPre.setStatus("202003");
+        coursePublishPre.setCreateDate(LocalDateTime.now());
+        //查询预发布表，如果有记录则更新，没有则插入
+        CoursePublishPre coursePublishPreObj = coursePublishPreMapper.selectById(courseId);
+        if (coursePublishPreObj == null) {
+            //插入
+            coursePublishPreMapper.insert(coursePublishPre);
+        } else {
+            coursePublishPreMapper.updateById(coursePublishPre);
+        }
+        //更新课程信息表的审核状态为提交
+        CourseBase courseBase = courseBaseMapper.selectById(courseId);
+        courseBase.setAuditStatus("202003");//审核状态为已提交
+
+        courseBaseMapper.updateById(courseBase);
+    }
 
 
 }

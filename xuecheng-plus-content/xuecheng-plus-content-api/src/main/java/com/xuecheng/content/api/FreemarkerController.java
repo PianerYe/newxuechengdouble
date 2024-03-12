@@ -1,8 +1,14 @@
 package com.xuecheng.content.api;
 
+import com.xuecheng.content.service.CoursePublishService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
 
 /**
  * @author yepianer
@@ -14,6 +20,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class FreemarkerController {
 
+    @Resource
+    CoursePublishService coursePublishService;
+
     @GetMapping("/testfreemarker")
     public ModelAndView test(){
 
@@ -24,4 +33,5 @@ public class FreemarkerController {
         modelAndView.setViewName("test");//根据视图名称加.ftl找到模板
         return modelAndView;
     }
+
 }
