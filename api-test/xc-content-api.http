@@ -110,3 +110,9 @@ Content-Type: application/json
   "position": "培训二级讲师",
   "teacherName": "李四郎"
 }
+
+### 制造异常
+POST {{content_host}}/content/coursepublish/123
+Content-Type: application/json
+
+

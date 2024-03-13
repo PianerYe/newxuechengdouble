@@ -51,4 +51,15 @@ public interface CourseBaseInfoService {
      * 未提交状态的课程，进行删除
      * */
     public void deleteCourse(Long companyId, Long id);
+
+    /**
+     * 审核完成课程，修改状态改为发布
+     * */
+    public void setCoursepublish(Long companyId,Long id);
+
+    /**
+     * 审核完成后，下架课程
+     * */
+    //下架课程
+    public void setCourseoffline(Long companyId, Long id);
 }

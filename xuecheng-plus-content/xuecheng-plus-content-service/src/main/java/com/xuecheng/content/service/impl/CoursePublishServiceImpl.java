@@ -20,8 +20,8 @@ import com.xuecheng.content.model.po.CoursePublishPre;
 import com.xuecheng.content.service.CourseBaseInfoService;
 import com.xuecheng.content.service.CoursePublishService;
 import com.xuecheng.content.service.TeachplanService;
-//import com.xuecheng.messagesdk.model.po.MqMessage;
-//import com.xuecheng.messagesdk.service.MqMessageService;
+import com.xuecheng.messagesdk.model.po.MqMessage;
+import com.xuecheng.messagesdk.service.MqMessageService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
@@ -63,6 +63,8 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     CourseBaseMapper courseBaseMapper;
     @Resource
     CoursePublishMapper coursePublishMapper;
+    @Resource
+    MqMessageService mqMessageService;
 
 
 
@@ -176,7 +178,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         }
         //向消息表写入数据
         //todo
-//        saveCoursePublishMessage(courseId);
+        saveCoursePublishMessage(courseId);
         //将预发布表数据删除
         coursePublishPreMapper.deleteById(courseId);
         //课程信息表发布状态改为已发布
@@ -187,13 +189,20 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         courseBaseMapper.updateById(courseBase);
     }
 
-//    private void saveCoursePublishMessage(Long courseId){
-//        MqMessage mqMessage = mqMessageService.addMessage("course_publish",
-//                String.valueOf(courseId), null, null);
-//        if (mqMessage==null){
-//            XueChengPlusException.cast(CommonError.UNKOWN_ERROR);
-//        }
-//    }
+    /**
+     * @deprecated 保存消息记录
+     * @param courseId 课程ID
+     * @return void
+     * @author yepianer
+     * @data 2024/3/13
+     * */
+    private void saveCoursePublishMessage(Long courseId){
+        MqMessage mqMessage = mqMessageService.addMessage("course_publish",
+                String.valueOf(courseId), null, null);
+        if (mqMessage==null){
+            XueChengPlusException.cast(CommonError.UNKOWN_ERROR);
+        }
+    }
 
 
 }
