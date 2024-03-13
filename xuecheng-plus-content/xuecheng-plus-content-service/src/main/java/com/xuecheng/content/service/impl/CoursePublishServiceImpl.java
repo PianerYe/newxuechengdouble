@@ -61,6 +61,8 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     CoursePublishPreMapper coursePublishPreMapper;
     @Resource
     CourseBaseMapper courseBaseMapper;
+    @Resource
+    CoursePublishMapper coursePublishMapper;
 
 
 
@@ -135,6 +137,63 @@ public class CoursePublishServiceImpl implements CoursePublishService {
 
         courseBaseMapper.updateById(courseBase);
     }
+
+    /**
+     * @deprecated 课程发布接口
+     * @param companyId 机构id
+     * @param courseId 课程id
+     * @return void
+     * @serialData 2024/3/13
+     * */
+    @Override
+    @Transactional
+    public void publish(Long companyId, Long courseId) {
+        //查询预发布表
+        CoursePublishPre coursePublishPre = coursePublishPreMapper.selectById(courseId);
+        if (coursePublishPre == null) {
+            XueChengPlusException.cast("课程没有审核记录，无法发布");
+        }
+        //课程机构
+        Long companyIdPre = coursePublishPre.getCompanyId();
+        if (companyId.longValue() != companyIdPre.longValue()) {
+            XueChengPlusException.cast("提交课程机构和课程所属机构不相符，发布被拒绝");
+        }
+        //状态
+        String status = coursePublishPre.getStatus();
+        //课程如果没有审核通过不允许发布
+        if (!"202004".equals(status)) {
+            XueChengPlusException.cast("课程没有审核通过，不允许发布");
+        }
+        //向发布表写入数据
+        CoursePublish coursePublish = new CoursePublish();
+        BeanUtils.copyProperties(coursePublishPre, coursePublish);
+        //先查询课程发布表，有则更新，无则添加
+        CoursePublish coursePublishObj = coursePublishMapper.selectById(courseId);
+        if (coursePublishObj == null) {
+            coursePublishMapper.insert(coursePublish);
+        } else {
+            coursePublishMapper.updateById(coursePublish);
+        }
+        //向消息表写入数据
+        //todo
+//        saveCoursePublishMessage(courseId);
+        //将预发布表数据删除
+        coursePublishPreMapper.deleteById(courseId);
+        //课程信息表发布状态改为已发布
+        CourseBase courseBase = new CourseBase();
+        CourseBase courseBaseOld = courseBaseMapper.selectById(courseId);
+        BeanUtils.copyProperties(courseBaseOld,courseBase);
+        courseBase.setStatus("203002");
+        courseBaseMapper.updateById(courseBase);
+    }
+
+//    private void saveCoursePublishMessage(Long courseId){
+//        MqMessage mqMessage = mqMessageService.addMessage("course_publish",
+//                String.valueOf(courseId), null, null);
+//        if (mqMessage==null){
+//            XueChengPlusException.cast(CommonError.UNKOWN_ERROR);
+//        }
+//    }
 
 
 }

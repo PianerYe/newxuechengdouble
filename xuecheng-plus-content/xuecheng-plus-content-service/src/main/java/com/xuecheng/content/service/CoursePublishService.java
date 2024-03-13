@@ -26,5 +26,14 @@ public interface CoursePublishService {
 
     public void commitAudit(Long companyId,Long courseId);
 
+    /**
+     * @deprecated 课程发布接口
+     * @param companyId 机构id
+     * @param courseId 课程id
+     * @return void
+     * @serialData 2024/3/13
+     * */
+    public void publish(Long companyId,Long courseId);
+
 
 }

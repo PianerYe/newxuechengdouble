@@ -5,6 +5,7 @@ import com.xuecheng.content.model.po.CourseTeacher;
 import com.xuecheng.content.service.CoursePublishService;
 import com.xuecheng.content.service.CourseTeacherService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,6 +64,14 @@ public class CoursePublishController {
     public void commitAudit(@PathVariable("courseId") Long courseId){
         Long companyId = 1232141425L;
         coursePublishService.commitAudit(companyId,courseId);
+    }
+
+    @ApiOperation("课程发布")
+    @PostMapping("/coursepublish/{courseId}")
+    public void setCoursepublish(@PathVariable("courseId") Long courseId){
+        //获取到用户所属机构的id
+        Long companyId = 1232141425L;
+        coursePublishService.publish(companyId,courseId);
     }
 
 }
