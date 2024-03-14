@@ -67,6 +67,7 @@ public class CoursePublishController {
     }
 
     @ApiOperation("课程发布")
+    @ResponseBody
     @PostMapping("/coursepublish/{courseId}")
     public void setCoursepublish(@PathVariable("courseId") Long courseId){
         //获取到用户所属机构的id
