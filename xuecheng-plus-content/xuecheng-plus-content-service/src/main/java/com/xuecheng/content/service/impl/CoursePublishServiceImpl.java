@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.xuecheng.base.exception.CommonError;
 import com.xuecheng.base.exception.XueChengPlusException;
 import com.xuecheng.base.utils.StringUtil;
-//import com.xuecheng.content.config.MultipartSupportConfig;
-//import com.xuecheng.content.feignclient.MediaServiceClient;
+import com.xuecheng.content.config.MultipartSupportConfig;
+import com.xuecheng.content.feignclient.MediaServiceClient;
 import com.xuecheng.content.mapper.CourseBaseMapper;
 import com.xuecheng.content.mapper.CourseMarketMapper;
 import com.xuecheng.content.mapper.CoursePublishMapper;
@@ -65,6 +65,8 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     CoursePublishMapper coursePublishMapper;
     @Resource
     MqMessageService mqMessageService;
+    @Resource
+    MediaServiceClient mediaServiceClient;
 
 
 
@@ -187,6 +189,72 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         BeanUtils.copyProperties(courseBaseOld,courseBase);
         courseBase.setStatus("203002");
         courseBaseMapper.updateById(courseBase);
+    }
+
+    /**
+     * @description 课程静态化
+     * @param courseId  课程id
+     * @return File 静态化文件
+     * @author Mr.M
+     * @date 2022/9/23 16:59
+     */
+    @Override
+    public File generateCourseHtml(Long courseId) {
+        Configuration configuration = new Configuration(Configuration.getVersion());
+        //最终的静态文件
+        File htmlFile = null;
+        try {
+            //拿到classpath路径
+//            String classpath = this.getClass().getResource("/").getPath();
+            String classpath = this.getClass().getResource("/").getPath().substring(1);;
+            //指定模板目录
+            configuration.setDirectoryForTemplateLoading(new File(classpath + "/templates/"));
+            //指定编码
+            configuration.setDefaultEncoding("utf-8");
+            //得到模板
+            Template template = configuration.getTemplate("course_template.ftl");
+            //准备数据
+            CoursePreviewDto coursePreviewInfo = this.getCoursePreviewInfo(courseId);
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("model", coursePreviewInfo);
+            //Template template 模板,object model 数据
+            String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, map);
+            //输入流
+            InputStream inputStream = IOUtils.toInputStream(html, "utf-8");
+            htmlFile = File.createTempFile("coursepublish",".html");
+            //输出文件
+            FileOutputStream outputStream = new FileOutputStream(htmlFile);
+            //使用流将html写入文件
+            IOUtils.copy(inputStream, outputStream);
+        }catch (Exception e){
+            log.error("页面静态化出现问题,课程id：{}",courseId,e);
+            e.printStackTrace();
+        }
+        return htmlFile;
+    }
+
+    /**
+     * @description 上传课程静态化页面
+     * @param file  静态化文件
+     * @return void
+     * @author Mr.M
+     * @date 2022/9/23 16:59
+     */
+    @Override
+    public void uploadCourseHtml(Long courseId, File file) {
+        try {
+            //将file转成MultipartFile
+            MultipartFile multipartFile = MultipartSupportConfig.getMultipartFile(file);
+            //远程调用得到返回值
+            String upload = mediaServiceClient.upload(multipartFile, "course/"+ courseId + ".html");
+            if (upload == null){
+                log.debug("远程走降级逻辑得到上传结果为空,课程id:{}",courseId);
+                XueChengPlusException.cast("上传静态文件过程中存在异常");
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            XueChengPlusException.cast("上传静态文件过程中存在异常");
+        }
     }
 
     /**
