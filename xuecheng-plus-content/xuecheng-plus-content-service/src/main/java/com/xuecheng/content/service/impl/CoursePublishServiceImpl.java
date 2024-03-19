@@ -13,12 +13,10 @@ import com.xuecheng.content.mapper.CoursePublishPreMapper;
 import com.xuecheng.content.model.dto.CourseBaseInfoDto;
 import com.xuecheng.content.model.dto.CoursePreviewDto;
 import com.xuecheng.content.model.dto.TeachplanDto;
-import com.xuecheng.content.model.po.CourseBase;
-import com.xuecheng.content.model.po.CourseMarket;
-import com.xuecheng.content.model.po.CoursePublish;
-import com.xuecheng.content.model.po.CoursePublishPre;
+import com.xuecheng.content.model.po.*;
 import com.xuecheng.content.service.CourseBaseInfoService;
 import com.xuecheng.content.service.CoursePublishService;
+import com.xuecheng.content.service.CourseTeacherService;
 import com.xuecheng.content.service.TeachplanService;
 import com.xuecheng.messagesdk.model.po.MqMessage;
 import com.xuecheng.messagesdk.service.MqMessageService;
@@ -67,7 +65,8 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     MqMessageService mqMessageService;
     @Resource
     MediaServiceClient mediaServiceClient;
-
+    @Resource
+    CourseTeacherService courseTeacherService;
 
 
     @Override
@@ -79,6 +78,12 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         //课程的计划信息
         List<TeachplanDto> teachplanTree = teachplanService.findTeachplanTree(courseId);
         coursePreviewDto.setTeachplans(teachplanTree);
+        //添加师资信息
+        //查询师资信息，添加到模型数据中,一门课程可以有多个老师，也存在没有老师的情况
+        List<CourseTeacher> courseTeachers = courseTeacherService.getTeacherList(courseId);
+        if (courseTeachers!= null && courseTeachers.size() > 0){
+            coursePreviewDto.setCourseTeachers(courseTeachers);
+        }
         return coursePreviewDto;
     }
 

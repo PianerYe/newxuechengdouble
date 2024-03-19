@@ -52,6 +52,7 @@ public class CoursePublishController {
 //            }).collect(Collectors.toList());
             coursePreviewInfo.setCourseTeachers(courseTeachers);
         }
+
         //指定模型
         modelAndView.addObject("model",coursePreviewInfo);
         //指定模板
