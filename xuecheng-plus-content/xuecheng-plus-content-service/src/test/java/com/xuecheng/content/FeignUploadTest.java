@@ -27,10 +27,10 @@ public class FeignUploadTest {
     public void test() throws IOException {
 
         //将file转成MultipartFile
-        File file = new File("D:\\java\\yepianerxuecheng\\xuecheng-plus-content\\xuecheng-plus-content-service\\src\\test\\resources\\templates\\122.html");
+        File file = new File("E:\\newxuechengdouble\\xuecheng-plus-content\\xuecheng-plus-content-service\\src\\test\\resources\\templates\\122.html");
         MultipartFile multipartFile = MultipartSupportConfig.getMultipartFile(file);
         //远程调用得到返回值
-        String upload = mediaServiceClient.upload(multipartFile, "course/122.html");
+        String upload = mediaServiceClient.upload(multipartFile, "course/120.html");
         if (upload == null){
             System.out.println("走了降级逻辑");
         }

@@ -44,7 +44,7 @@ public class FreemarkerTest {
         //得到模板
         Template template = configuration.getTemplate("course_template.ftl");
         //准备数据
-        CoursePreviewDto coursePreviewInfo = coursePublishService.getCoursePreviewInfo(122L);
+        CoursePreviewDto coursePreviewInfo = coursePublishService.getCoursePreviewInfo(120L);
         HashMap<String, Object> map = new HashMap<>();
         map.put("model",coursePreviewInfo);
         //Template template 模板,object model 数据
@@ -54,7 +54,7 @@ public class FreemarkerTest {
         //输出文件
         FileOutputStream outputStream =
                 new FileOutputStream(new File(
-                        "E:\\newxuechengdouble\\xuecheng-plus-content\\xuecheng-plus-content-service\\src\\test\\resources\\templates\\122.html"));
+                        "E:\\newxuechengdouble\\xuecheng-plus-content\\xuecheng-plus-content-service\\src\\test\\resources\\templates\\120.html"));
         //使用流将html写入文件
         IOUtils.copy(inputStream,outputStream);
     }

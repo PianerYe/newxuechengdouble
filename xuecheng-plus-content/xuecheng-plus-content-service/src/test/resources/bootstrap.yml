@@ -15,6 +15,10 @@ spring:
         group: yepianerxuecheng
         fileExtension: yaml
         refreshEnabled: true
+        shared-configs:
+          - data-id: feign-${spring.profiles.active}.yaml
+            group: yepianerxuecheng-common
+            refresh: true
 
 logging:
   config: classpath:log4j2-dev.xml
