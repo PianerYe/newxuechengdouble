@@ -210,8 +210,8 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         File htmlFile = null;
         try {
             //拿到classpath路径
-//            String classpath = this.getClass().getResource("/").getPath();
-            String classpath = this.getClass().getResource("/").getPath().substring(1);;
+            String classpath = this.getClass().getResource("/").getPath();
+//            String classpath = this.getClass().getResource("/").getPath().substring(1);;
             //指定模板目录
             configuration.setDirectoryForTemplateLoading(new File(classpath + "/templates/"));
             //指定编码
