@@ -172,7 +172,6 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         //将页面输入的数据拷贝到courseMarketNew
         BeanUtils.copyProperties(dto,courseMarketNew);
         //课程id
-        //课程id
         Long id = courseBaseNew.getId();
         courseMarketNew.setId(id);
         //保存营销信息
