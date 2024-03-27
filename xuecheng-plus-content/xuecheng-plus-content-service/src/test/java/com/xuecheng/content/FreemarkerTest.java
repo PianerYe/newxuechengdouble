@@ -54,7 +54,7 @@ public class FreemarkerTest {
         //输出文件
         FileOutputStream outputStream =
                 new FileOutputStream(new File(
-                        "E:\\newxuechengdouble\\xuecheng-plus-content\\xuecheng-plus-content-service\\src\\test\\resources\\templates\\120.html"));
+                        "D:\\java\\newxuechengdouble\\xuecheng-plus-content\\xuecheng-plus-content-service\\src\\test\\resources\\templates\\120.html"));
         //使用流将html写入文件
         IOUtils.copy(inputStream,outputStream);
     }

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: media-service
+    name: search
   cloud:
     nacos:
       server-addr: 192.168.75.129:8848
@@ -13,20 +13,13 @@ spring:
         group: yepianerxuecheng
         file-extension: yaml
         refresh-enabled: true
-      shared-configs:
-        - data-id: logging-${spring.profiles.active}.yaml
-          group: yepianerxuecheng-common
-          refresh: true
+        shared-configs:
+          - data-id: swagger-${spring.profiles.active}.yaml
+            group: yepianerxuecheng-common
+            refresh: true
+          - data-id: logging-${spring.profiles.active}.yaml
+            group: yepianerxuecheng-common
+            refresh: true
 
-  #profiles默认为dev
   profiles:
     active: dev
-  servlet:
-    multipart:
-      max-file-size: 500MB
-      max-request-size: 500MB
-server:
-  tomcat:
-    max-swallow-size: 500MB
-
-
