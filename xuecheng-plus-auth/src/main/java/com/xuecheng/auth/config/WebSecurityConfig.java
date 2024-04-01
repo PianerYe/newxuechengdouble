@@ -1,6 +1,5 @@
 package com.xuecheng.auth.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -11,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
@@ -86,20 +84,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        .formLogin().successForwardUrl("/login-success")
 //        .and()
 //        .cors(); // 启用 CORS 支持
-//    public static void main(String[] args) {
-//        String password = "111111";
-//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        for (int i = 0; i < 5; i++) {
-//            //生成密码
-//            String encode = passwordEncoder.encode(password);
-//            System.out.println(encode);
-//            //校验密码,参数1是输入的明文，参数2是正确密码加密后的串
-//            boolean matches = passwordEncoder.matches(password, encode);
-//            System.out.println(matches);
-//        }
-//
-//        boolean matches = passwordEncoder.matches("1234", "$2a$10$chXHZZfMTr8ljzNpVRN/k.MYtkn5TMYMjv5md9ElNxBem16i2MdFu");
-//        System.out.println(matches);
-//    }
+    public static void main(String[] args) {
+        String password = "111111";
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        for (int i = 0; i < 5; i++) {
+            //生成密码
+            String encode = passwordEncoder.encode(password);
+            System.out.println(encode);
+            //校验密码,参数1是输入的明文，参数2是正确密码加密后的串
+            boolean matches = passwordEncoder.matches(password, encode);
+            System.out.println(matches);
+        }
+
+        boolean matches = passwordEncoder.matches("1234", "$2a$10$chXHZZfMTr8ljzNpVRN/k.MYtkn5TMYMjv5md9ElNxBem16i2MdFu");
+        System.out.println(matches);
+    }
 
 }
