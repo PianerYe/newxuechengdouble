@@ -87,7 +87,6 @@
             <artifactId>okhttp</artifactId>
         </dependency>
 
-        <!--Springboot 集成认证授权 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-security</artifactId>
@@ -96,12 +95,11 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-oauth2</artifactId>
         </dependency>
-
-        <!--redis-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
+
     </dependencies>
 
 

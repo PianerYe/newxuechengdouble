@@ -38,6 +38,7 @@ public class LoginController {
         return xcUser;
     }
 
+
     @RequestMapping("/r/r1")
     @PreAuthorize("hasAuthority('p1')")//拥有p1权限可访问
     public String r1() {
@@ -49,7 +50,5 @@ public class LoginController {
     public String r2() {
         return "访问r2资源";
     }
-
-
 
 }
