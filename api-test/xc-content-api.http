@@ -1,5 +1,6 @@
 ### 查询课程信息
 POST {{content_host}}/content/course/list?pageSize=2&pageSize=2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsieHVlY2hlbmctcGx1cyJdLCJ1c2VyX25hbWUiOiJ6aGFuZ3NhbiIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE3MTI1Njk5NjIsImF1dGhvcml0aWVzIjpbInAxIl0sImp0aSI6IjRlOTM3OTQ1LWE4YWQtNGZkYy05NTU4LWE2ZTZjMTdhNmY5NSIsImNsaWVudF9pZCI6IlhjV2ViQXBwIn0.Qk47Kx_Lrzp9khi6htqRBvPADFzAuyLI46kof88y4aw
 Content-Type: application/json
 
 {
