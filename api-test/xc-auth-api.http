@@ -5,7 +5,7 @@ POST {{auth_host}}/auth/oauth/token?client_id=XcWebApp&client_secret=XcWebApp&gr
 
 
 ### 密码模式
-POST {{auth_host}}/auth/oauth/token?client_id=XcWebApp&client_secret=XcWebApp&grant_type=password&username=zhangsan&password=123
+POST {{auth_host}}/auth/oauth/token?client_id=XcWebApp&client_secret=XcWebApp&grant_type=password&username=t1&password=111111
 
 ###校验jwt令牌
 POST {{auth_host}}/auth/oauth/check_token?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsieHVlY2hlbmctcGx1cyJdLCJ1c2VyX25hbWUiOiJ6aGFuZ3NhbiIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE3MTI1NjkwNjUsImF1dGhvcml0aWVzIjpbInAxIl0sImp0aSI6Ijg3MGFlNjRiLTAzYTUtNGE5NC1iNGE3LWRiNTE5OGQ1ZmY0MyIsImNsaWVudF9pZCI6IlhjV2ViQXBwIn0.C2YTtC0HVUlcq2f-n3UHNkybvK9WVJnTIn_vYedGKH4
