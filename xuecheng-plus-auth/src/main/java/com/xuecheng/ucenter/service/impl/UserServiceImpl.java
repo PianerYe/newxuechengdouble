@@ -42,46 +42,46 @@ public class UserServiceImpl implements UserDetailsService {
     //传人的认证请求参数就是AuthParamsDto
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-//        //将传入的json转成AuthParamsDto对象
-//        AuthParamsDto authParamsDto = null;
-//
-//        try{
-//            authParamsDto = JSON.parseObject(s,AuthParamsDto.class);
-//        }catch (Exception e){
-//            throw new RuntimeException("请求认证的参数不符合要求");
-//        }
-//
-//        //认证类型,有password,wx...
-//        String authType = authParamsDto.getAuthType();
-//
-//        //根据认证类型从spring容器中取出指定的Bean
-//        String beanName = authType + "_authservice";
-//        AuthService authService = applicationContext.getBean(beanName, AuthService.class);
-//        //调用统一execute方法完成认证
-//        XcUserExt xcUserExt = authService.execute(authParamsDto);
-//        //封装XcUserExt用户信息为Use'r'Details
-//        //根据UserDetails对象生成令牌
-//        UserDetails userPrincipal = getUserPrincipal(xcUserExt);
-//
-//        return userPrincipal;
-        //账号
-        String username = s;
-        //根据username查询数据库
-        XcUser xcUser = xcUserMapper.selectOne(new LambdaQueryWrapper<XcUser>().eq(XcUser::getUsername, username));
-        //查询用户名不存在，返回Null即可
-        if (xcUser == null){
-            return null;
+        //将传入的json转成AuthParamsDto对象
+        AuthParamsDto authParamsDto = null;
+
+        try{
+            authParamsDto = JSON.parseObject(s,AuthParamsDto.class);
+        }catch (Exception e){
+            throw new RuntimeException("请求认证的参数不符合要求");
         }
-        String password = xcUser.getPassword();
-        //权限
-        String[] authorities = {"test"};
 
-        xcUser.setPassword(null);
-        //将用户信息转json
-        String userJson = JSON.toJSONString(xcUser);
-        UserDetails userDetails = User.withUsername(userJson).password(password).authorities(authorities).build();
+        //认证类型,有password,wx...
+        String authType = authParamsDto.getAuthType();
 
-        return userDetails;
+        //根据认证类型从spring容器中取出指定的Bean
+        String beanName = authType + "_authservice";
+        AuthService authService = applicationContext.getBean(beanName, AuthService.class);
+        //调用统一execute方法完成认证
+        XcUserExt xcUserExt = authService.execute(authParamsDto);
+        //封装XcUserExt用户信息为Use'r'Details
+        //根据UserDetails对象生成令牌
+        UserDetails userPrincipal = getUserPrincipal(xcUserExt);
+
+        return userPrincipal;
+//        //账号
+//        String username = s;
+//        //根据username查询数据库
+//        XcUser xcUser = xcUserMapper.selectOne(new LambdaQueryWrapper<XcUser>().eq(XcUser::getUsername, username));
+//        //查询用户名不存在，返回Null即可
+//        if (xcUser == null){
+//            return null;
+//        }
+//        String password = xcUser.getPassword();
+//        //权限
+//        String[] authorities = {"test"};
+//
+//        xcUser.setPassword(null);
+//        //将用户信息转json
+//        String userJson = JSON.toJSONString(xcUser);
+//        UserDetails userDetails = User.withUsername(userJson).password(password).authorities(authorities).build();
+//
+//        return userDetails;
     }
 
     /**
