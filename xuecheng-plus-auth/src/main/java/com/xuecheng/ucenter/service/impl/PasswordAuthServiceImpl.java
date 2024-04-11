@@ -1,6 +1,7 @@
 package com.xuecheng.ucenter.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+//import com.xuecheng.ucenter.feignclient.CheckCodeClient;
 import com.xuecheng.ucenter.feignclient.CheckCodeClient;
 import com.xuecheng.ucenter.mapper.XcUserMapper;
 import com.xuecheng.ucenter.model.dto.AuthParamsDto;
@@ -43,7 +44,7 @@ public class PasswordAuthServiceImpl implements AuthService {
             throw new RuntimeException("请输入验证码");
         }
 
-      // 远程调用验证码服务接口去校验验证码
+        //远程调用验证码服务接口去校验验证码
         //todo:校验验证码
         Boolean verify = checkCodeClient.verify(checkcodekey, checkcode);
         if (verify == null || !verify){
