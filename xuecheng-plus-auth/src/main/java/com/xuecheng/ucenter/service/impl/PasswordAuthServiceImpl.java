@@ -2,6 +2,7 @@ package com.xuecheng.ucenter.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 //import com.xuecheng.ucenter.feignclient.CheckCodeClient;
+import com.xuecheng.ucenter.feignclient.CheckCodeClient;
 import com.xuecheng.ucenter.mapper.XcUserMapper;
 import com.xuecheng.ucenter.model.dto.AuthParamsDto;
 import com.xuecheng.ucenter.model.dto.XcUserExt;
@@ -27,8 +28,8 @@ public class PasswordAuthServiceImpl implements AuthService {
     XcUserMapper xcUserMapper;
     @Resource
     PasswordEncoder passwordEncoder;
-//    @Resource
-//    CheckCodeClient checkCodeClient;
+    @Resource
+    CheckCodeClient checkCodeClient;
     @Override
     public XcUserExt execute(AuthParamsDto authParamsDto) {
         //账号
@@ -39,16 +40,16 @@ public class PasswordAuthServiceImpl implements AuthService {
         //验证码对应的key
         String checkcodekey = authParamsDto.getCheckcodekey();
 
-//        if (StringUtils.isEmpty(checkcode) || StringUtils.isEmpty(checkcodekey)){
-//            throw new RuntimeException("请输入验证码");
-//        }
+        if (StringUtils.isEmpty(checkcode) || StringUtils.isEmpty(checkcodekey)){
+            throw new RuntimeException("请输入验证码");
+        }
 
         //远程调用验证码服务接口去校验验证码
-//        //todo:校验验证码
-//        Boolean verify = checkCodeClient.verify(checkcodekey, checkcode);
-//        if (verify == null || !verify){
-//            throw new RuntimeException("验证码输入错误");
-//        }
+        //todo:校验验证码
+        Boolean verify = checkCodeClient.verify(checkcodekey, checkcode);
+        if (verify == null || !verify){
+            throw new RuntimeException("验证码输入错误");
+        }
 
 
         //账号是否存在
