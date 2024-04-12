@@ -57,8 +57,8 @@ public class CourseBaseInforController {
         //获取到用户所属机构的id
 //        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        System.out.println(principal);
-        SecurityUtil.XcUser user = SecurityUtil.getUser();
-        System.out.println(user.getUsername());
+//        SecurityUtil.XcUser user = SecurityUtil.getUser();
+//        System.out.println(user.getUsername());
         CourseBaseInfoDto courseBaseInfo = courseBaseInfoService.getCourseBaseInfo(courseId);
         return courseBaseInfo;
     }
