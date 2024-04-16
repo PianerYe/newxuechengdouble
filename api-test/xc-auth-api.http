@@ -17,3 +17,6 @@ POST {{auth_host}}/auth/oauth/token?client_id=XcWebApp&client_secret=XcWebApp&gr
 POST {{auth_host}}/auth/wxLogin
 ### 密码模式,请求AuthParamsDto参数
 GET {{auth_host}}/auth/wxLogin
+
+### 查看
+GET {{auth_host}}/auth/getCodeItem/833347DF84E33F21FC607776BE837DAA1712998132903
