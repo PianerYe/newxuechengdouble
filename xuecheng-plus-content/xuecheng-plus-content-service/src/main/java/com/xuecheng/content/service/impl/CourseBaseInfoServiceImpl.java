@@ -51,7 +51,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
      * @return 查询结果
      */
     @Override
-    public PageResult<CourseBaseDto> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
+    public PageResult<CourseBaseDto> queryCourseBaseList(Long companyId,PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
         // 测试查询接口
         LambdaQueryWrapper<CourseBase> queryWrapper = new LambdaQueryWrapper<>();
         //拼接查询条件
@@ -63,7 +63,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
                 CourseBase::getAuditStatus,queryCourseParamsDto.getAuditStatus());
         //按课程发布状态查询
         //根据培训机构的id拼装查询条件
-//        queryWrapper.eq(CourseBase::getCompanyId,companyId);
+        queryWrapper.eq(CourseBase::getCompanyId,companyId);
         //分页参数
         Page<CourseBase> page = new Page<>(pageParams.getPageNo(), pageParams.getPageSize());
         Page<CourseBaseDto> dtoPage = new Page<>(pageParams.getPageNo(), pageParams.getPageSize());

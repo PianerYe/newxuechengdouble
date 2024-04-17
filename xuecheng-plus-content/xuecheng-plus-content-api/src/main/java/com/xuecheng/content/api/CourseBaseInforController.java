@@ -8,6 +8,7 @@ import com.xuecheng.content.model.dto.*;
 import com.xuecheng.content.service.CourseBaseInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -36,11 +37,17 @@ public class CourseBaseInforController {
     @PostMapping( "/course/list")
     public PageResult<CourseBaseDto> list(PageParams pageParams, @RequestBody(required = false) QueryCourseParamsDto queryCourseParamsDto){
 
+        //当前登录用户
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        //用户所属的机构ID
         //用户所属机构ID
         Long companyId = null;
+        if (StringUtils.isNotEmpty(user.getCompanyId())){
+            companyId = Long.parseLong(user.getCompanyId());
+        }
 
         //subsectionNum  任务数   <div>{{scope.row.charge | chargeText}}</div> 是否付费
-        PageResult<CourseBaseDto> courseBasePageResult = courseBaseInfoService.queryCourseBaseList(pageParams, queryCourseParamsDto);
+        PageResult<CourseBaseDto> courseBasePageResult = courseBaseInfoService.queryCourseBaseList(companyId,pageParams, queryCourseParamsDto);
         return courseBasePageResult;
     }
     @ApiOperation("新增课程接口")
