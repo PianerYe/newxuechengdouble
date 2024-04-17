@@ -93,7 +93,7 @@ public class Mp4VideoUtil extends VideoUtil {
 //        String ffmpeg_path = "D:\\soft\\ffmpeg\\ffmpeg.exe";//ffmpeg的安装位置
         String ffmpeg_path = "D:\\soft\\ffmpeg\\bin\\ffmpeg.exe";
         //源avi视频的路径
-        String video_path = "D:\\soft\\test\\test.avi";
+        String video_path = "C:\\Users\\yxkf\\Desktop\\enVideo-DHVRdp8l.mp4";
         //转换后mp4文件的名称
         String mp4_name = "abc.mp4";
         //转换后mp4文件的路径
