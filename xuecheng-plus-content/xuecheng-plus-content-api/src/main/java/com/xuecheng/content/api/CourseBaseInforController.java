@@ -8,6 +8,7 @@ import com.xuecheng.content.model.dto.*;
 import com.xuecheng.content.service.CourseBaseInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,9 @@ public class CourseBaseInforController {
     CourseBaseInfoService courseBaseInfoService;
 
     @ApiOperation("课程分页查询接口")
+    //xc_sysmanager_menu_add
+//    @PreAuthorize("hasAuthority('xc_sysmanager_menu_add')")//测试权限标识符问题
+    @PreAuthorize("hasAuthority('xc_teachmanager_course_list')")//权限标识符,拥有此权限才可以访问此方法
     @PostMapping( "/course/list")
     public PageResult<CourseBaseDto> list(PageParams pageParams, @RequestBody(required = false) QueryCourseParamsDto queryCourseParamsDto){
 
