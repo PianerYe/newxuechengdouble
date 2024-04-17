@@ -263,6 +263,15 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     }
 
     /**
+     * 根据课程ID查询课程发布信息
+     * */
+    @Override
+    public CoursePublish getCoursePublish(Long courseId) {
+        CoursePublish coursePublish = coursePublishMapper.selectById(courseId);
+        return coursePublish;
+    }
+
+    /**
      * @deprecated 保存消息记录
      * @param courseId 课程ID
      * @return void
