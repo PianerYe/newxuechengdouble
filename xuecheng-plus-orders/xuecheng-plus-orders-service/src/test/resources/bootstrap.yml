@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: orders-service
+  cloud:
+    nacos:
+#      server-addr: 192.168.75.129:8848
+      server-addr: 192.168.240.132:8848
+      discovery:
+        namespace: devyepianer
+        group: yepianerxuecheng
+      config:
+        namespace: devyepianer
+        group: yepianerxuecheng
+        file-extension: yaml
+        refresh-enabled: true
+        shared-configs:
+          - data-id: logging-${spring.profiles.active}.yaml
+            group: yepianerxuecheng-common
+            refresh: true
+
+  #profiles默认为dev
+  profiles:
+    active: dev
+
+
+
