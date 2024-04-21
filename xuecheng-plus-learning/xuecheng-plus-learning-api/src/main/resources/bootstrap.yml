@@ -5,8 +5,8 @@ spring:
     name: learning-api
   cloud:
     nacos:
-#      server-addr: 192.168.75.129:8848
-      server-addr: 192.168.240.132:8848
+      server-addr: 192.168.75.129:8848
+#      server-addr: 192.168.240.132:8848
       discovery:
         namespace: devyepianer
         group: yepianerxuecheng
@@ -27,6 +27,9 @@ spring:
             group: yepianerxuecheng-common
             refresh: true
           - data-id: feign-${spring.profiles.active}.yaml
+            group: yepianerxuecheng-common
+            refresh: true
+          - data-id: rabbitmq-${spring.profiles.active}.yaml
             group: yepianerxuecheng-common
             refresh: true
 

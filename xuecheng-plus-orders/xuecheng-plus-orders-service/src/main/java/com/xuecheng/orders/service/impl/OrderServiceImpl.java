@@ -205,7 +205,7 @@ public class OrderServiceImpl implements OrderService {
             xcOrders.setStatus("600002");//订单状态为交易成功
             ordersMapper.updateById(xcOrders);
 
-            //将消息写道数据库
+            //将消息写到数据库
             MqMessage mqMessage = mqMessageService.addMessage("payresult_notify", xcOrders.getOutBusinessId(),
                     xcOrders.getOrderType(), null);
             //发送消息
