@@ -4,8 +4,8 @@ spring:
     name: orders-api
   cloud:
     nacos:
-      server-addr: 192.168.75.129:8848
-#      server-addr: 192.168.240.132:8848
+#      server-addr: 192.168.75.129:8848
+      server-addr: 192.168.240.132:8848
       discovery:
         namespace: devyepianer
         group: yepianerxuecheng

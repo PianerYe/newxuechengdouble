@@ -1,6 +1,7 @@
 package com.xuecheng.learning.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.xuecheng.base.model.RestResponse;
 import com.xuecheng.base.utils.StringUtil;
 import com.xuecheng.content.model.po.CoursePublish;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author yepianer
@@ -46,19 +48,21 @@ public class LearningServiceImpl implements LearningService {
         //也可以从coursepublish对象中解析出课程计划信息去判断是否支持试学
         //todo:如果支持试学，直接调用媒资服务查询视频的播放地址，返回
         String teachplanJson = coursepublish.getTeachplan();
-        //[{"courseId":2,"grade":1,
-        // "id":266,"isPreview":"0",
-        // "orderby":1,"parentid":0,"pname":"第1章",
-        // "teachPlanTreeNodes":[{"courseId":2,"grade":2,"id":267,"isPreview":"0","orderby":1,
-        // "parentid":266,"pname":"第1节",
-        // "teachplanMedia":{"courseId":2,"teachplanId":267}}]}]
-        Teachplan teachplan = JSON.parseObject(teachplanJson, Teachplan.class);
-        if ("1".equals(teachplan.getIsPreview())){
-            RestResponse<String> playUrlByMediaId =
-                    mediaServiceClient.getPlayUrlByMediaId(mediaId);
-            return playUrlByMediaId;
+        /*[{"courseId":2,"grade":1,
+         "id":266,"isPreview":"0",
+         "orderby":1,"parentid":0,"pname":"第1章",
+         "teachPlanTreeNodes":[{"courseId":2,"grade":2,"id":267,"isPreview":"0","orderby":1,
+         "parentid":266,"pname":"第1节",
+         "teachplanMedia":{"courseId":2,"teachplanId":267}}]}]*/
+//        Teachplan teachplan = JSON.parseObject(teachplanJson, Teachplan.class);
+        List<Teachplan> teachplanList = JSON.parseArray(teachplanJson, Teachplan.class);
+        for (Teachplan teachplan:teachplanList) {
+            if ("1".equals(teachplan.getIsPreview())){
+                RestResponse<String> playUrlByMediaId =
+                        mediaServiceClient.getPlayUrlByMediaId(mediaId);
+                return playUrlByMediaId;
+            }
         }
-
 
         if (StringUtil.isNotEmpty(userId)){
             //获取学习资格

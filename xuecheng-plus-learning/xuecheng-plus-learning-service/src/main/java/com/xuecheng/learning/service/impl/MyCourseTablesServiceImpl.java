@@ -150,6 +150,7 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
 
         //根据选课id查询选课表
         XcChooseCourse chooseCourse = chooseCourseMapper.selectById(chooseCourseId);
+
         if (chooseCourse == null){
             log.debug("接收到购买课程的消息，根据选课id从数据库找不到选课记录:选课id:{}",chooseCourse);
             return false;
