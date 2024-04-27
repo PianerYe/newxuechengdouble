@@ -63,7 +63,7 @@ public class LoginController {
      * }
      *
      */
-    */
+
     @PostMapping("/findpassword")
     public void findPassword(){
         //找回密码需要输入的对象，用于修改用户数据库的密码
