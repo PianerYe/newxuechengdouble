@@ -45,5 +45,10 @@ public class CheckCodeController {
         Boolean isSuccess = picCheckCodeService.verify(key,code);
         return isSuccess;
     }
+
+    /**
+     * http://www.51xuecheng.cn/api/checkcode/phone?param1=aimeinvshen@126.com
+     * */
+    //通过param1参数发送验证码，邮箱方式发送到邮箱，手机方式发送到手机上
 }
 

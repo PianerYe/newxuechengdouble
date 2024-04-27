@@ -15,12 +15,14 @@ import com.xuecheng.learning.model.po.XcChooseCourse;
 import com.xuecheng.learning.model.po.XcCourseTables;
 import com.xuecheng.learning.service.MyCourseTablesService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -180,11 +182,45 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
         int pageNo = params.getPage();
         //每页记录数
         int pageSize = params.getSize();
+        //是否插入课程类型判断
+        //课程类型  [{"code":"700001","desc":"免费课程"},{"code":"700002","desc":"收费课程"}]
+        String courseType = params.getCourseType();
+        //排序 1按学习时间进行排序 2按加入时间进行排序
+        String sortType = params.getSortType();
+        //1即将过期、2已经过期
+        String expiresType = params.getExpiresType();
+        //定义即将过期和过期的概念,即将过期是到期前一个月，失效是已经超过到期时间
+
 
         Page<XcCourseTables> courseTablesPage = new Page<>(pageNo,pageSize);
 
         LambdaQueryWrapper<XcCourseTables> lambdaQueryWrapper =
-                new LambdaQueryWrapper<XcCourseTables>().eq(XcCourseTables::getUserId, userId);
+                new LambdaQueryWrapper<XcCourseTables>();
+        lambdaQueryWrapper.eq(XcCourseTables::getUserId, userId);
+        //进行课程类型筛选
+        lambdaQueryWrapper.eq(StringUtils.isNotEmpty(courseType),XcCourseTables::getCourseType,courseType);
+        //判断即将过期以及失效
+        if (expiresType != null && !"".equals(expiresType)){
+            if ("1".equals(expiresType)){
+                //select * from xxx where( time > endtime - 1month )and time < timeend
+                lambdaQueryWrapper.lt(XcCourseTables::getValidtimeEnd,LocalDateTime.now().minusMonths(1L));
+                lambdaQueryWrapper.gt(XcCourseTables::getValidtimeEnd,LocalDateTime.now());
+            }
+            //已过期
+            if ("2".equals(expiresType)){
+                //select * from xxx where time > endtime
+                lambdaQueryWrapper.lt(XcCourseTables::getValidtimeEnd,LocalDateTime.now());
+            }
+        }
+        //排序 1按学习时间进行排序 2按加入时间进行排序
+        if (sortType != null && !"".equals(sortType)){
+            if ("1".equals(sortType)){
+                lambdaQueryWrapper.orderBy(true,true,XcCourseTables::getUpdateDate);
+            }
+            if ("2".equals(sortType)){
+                lambdaQueryWrapper.orderBy(true,true,XcCourseTables::getCreateDate);
+            }
+        }
 
         Page<XcCourseTables> result =
                 courseTablesMapper.selectPage(courseTablesPage, lambdaQueryWrapper);
