@@ -74,9 +74,9 @@ public class CheckCodeController {
     /**
      * 发送手机短信验证码
      */
-    @PostMapping("/phone")
+    @PostMapping(value = "/phone")
     @ApiOperation("发送手机短信验证码接口")
-    public R<String> sendMsg(String phoneOrEmail) {
+    public R<String> getPhoneOrEmailCheckCode(@RequestParam("param1") String phoneOrEmail) {
         //随机生成一个6位数字验证码
         String code = ValidateCodeUtils.generateValidateCode(6).toString();
         //给用户发送验证码
@@ -84,7 +84,7 @@ public class CheckCodeController {
         //假如是手机,做校验
         if (isChinaPhone(phoneOrEmail)) {
             //发送手机验证码
-            sendShortMessage(Integer.parseInt(code), phoneOrEmail);  //为了省钱，不再发了
+        //    sendShortMessage(Integer.parseInt(code), phoneOrEmail);  //为了省钱，不再发了
         } else if (isValidEmail(phoneOrEmail)) {
             //发送邮箱验证码到邮箱
             sendEmail(phoneOrEmail,"重置密码","你的学成账号密码重置中，验证码是:" + code );
