@@ -2,8 +2,15 @@ package com.xuecheng.checkcode.utils;
 
 
 import com.xuecheng.checkcode.utils.sms.Client;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+
+import javax.annotation.Resource;
 
 public class SMSUtils {
+
+    @Resource
+    private JavaMailSender javaMailSender;
 
     public static void sendShortMessage(Integer code,String telephone){
         Client client = new Client();
@@ -30,6 +37,8 @@ public class SMSUtils {
         System.out.println( client.execute(request) );
 
     }
+
+
 
 
 }

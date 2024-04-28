@@ -6,6 +6,7 @@ import com.xuecheng.checkcode.model.CheckCodeParamsDto;
 import com.xuecheng.checkcode.model.CheckCodeResultDto;
 import com.xuecheng.checkcode.model.R;
 import com.xuecheng.checkcode.service.CheckCodeService;
+import com.xuecheng.checkcode.utils.ValidPhoneAndEmailUtils;
 import com.xuecheng.checkcode.utils.ValidateCodeUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -25,6 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.xuecheng.checkcode.utils.SMSUtils.sendShortMessage;
+import static com.xuecheng.checkcode.utils.ValidPhoneAndEmailUtils.isChinaPhone;
 
 /**
  * @author Mr.M
@@ -82,10 +84,10 @@ public class CheckCodeController {
         //给用户发送验证码
         System.out.println(code);
         //假如是手机,做校验
-        if (isChinaPhone(phoneOrEmail)) {
+        if (ValidPhoneAndEmailUtils.isChinaPhone(phoneOrEmail)) {
             //发送手机验证码
         //    sendShortMessage(Integer.parseInt(code), phoneOrEmail);  //为了省钱，不再发了
-        } else if (isValidEmail(phoneOrEmail)) {
+        } else if (ValidPhoneAndEmailUtils.isValidEmail(phoneOrEmail)) {
             //发送邮箱验证码到邮箱
             sendEmail(phoneOrEmail,"重置密码","你的学成账号密码重置中，验证码是:" + code );
         } else {
@@ -94,25 +96,9 @@ public class CheckCodeController {
         }
 
         //将生成的验证码缓存到Redis中，并且设置有效期为五分钟
-        redisTemplate.opsForValue().set(phoneOrEmail, code, 5, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(phoneOrEmail + "findpassword", code, 5, TimeUnit.MINUTES);
 
         return R.success("手机验证码发送成功");
-    }
-
-    //手机号做校验
-    public boolean isChinaPhone(String phone) {
-        String regExp = "^((13[0-9])|(14[5,7,9])|(15[0-3,5-9])|(166)|(17[3,5,6,7,8])|(18[0-9])|(19[8,9]))\\d{8}$";
-        Pattern pattern = Pattern.compile(regExp);
-        Matcher matcher = pattern.matcher(phone);
-        return matcher.matches();
-    }
-
-    //邮箱校验
-    public static boolean isValidEmail(String email) {
-        if ((email != null) && (!email.isEmpty())) {
-            return Pattern.matches("^(\\w+([-.][A-Za-z0-9]+)*){3,18}@\\w+([-.][A-Za-z0-9]+)*\\.\\w+([-.][A-Za-z0-9]+)*$", email);
-        }
-        return false;
     }
 
     //发送邮箱验证码
