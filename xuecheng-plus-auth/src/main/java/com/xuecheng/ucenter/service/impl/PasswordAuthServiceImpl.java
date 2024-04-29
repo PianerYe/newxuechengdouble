@@ -16,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
@@ -35,8 +36,6 @@ public class PasswordAuthServiceImpl implements AuthService {
     PasswordEncoder passwordEncoder;
     @Resource
     CheckCodeClient checkCodeClient;
-    @Resource
-    RedisTemplate redisTemplate;
     @Override
     public XcUserExt execute(AuthParamsDto authParamsDto) {
         //账号
@@ -81,37 +80,4 @@ public class PasswordAuthServiceImpl implements AuthService {
         return xcUserExt;
     }
 
-    public void findPassword(@RequestBody FindPassowrdDto findPassowrdDto){
-        //找回密码需要输入的对象，用于修改用户数据库的密码
-        //FindPassowrdDto
-        //1:先判断输入的密码是否一致,且密码不能为空
-        //本身是前端做的校验
-        String password = findPassowrdDto.getPassword();
-        if (password == null && "".equals(password)){
-            //提醒密码不能为空
-            throw new RuntimeException("密码不能为空");
-        }
-        if (!password.equals(findPassowrdDto.getConfirmpwd())){
-            throw new RuntimeException("两次输入的密码不一致");
-        }
-        //校验手机以及邮箱的格式，只要其中一个满足即可
-        if (ValidPhoneAndEmailUtils.isChinaPhone(findPassowrdDto.getCellphone())){
-            //校验验证码是否正确
-            String checkcode = findPassowrdDto.getCheckcode();
-            String checkcodeRedis = (String) redisTemplate.opsForValue().get(findPassowrdDto.getCellphone() + "findpassword");
-            if (password == null && "".equals(password)){
-                //验证码不能为空
-                XueChengPlusException.cast("验证码不能为空");
-            }
-            //通过手机号查找是否在数据库存在这个账号
-
-        } else if (ValidPhoneAndEmailUtils.isValidEmail(findPassowrdDto.getEmail())) {
-            //校验验证码是否正确
-            //通过邮箱查找是否在数据库中存在这个账号
-
-        }
-
-
-
-    }
 }

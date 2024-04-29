@@ -3,6 +3,8 @@ package com.xuecheng.auth.controller;
 import com.xuecheng.ucenter.mapper.XcUserMapper;
 import com.xuecheng.ucenter.model.dto.FindPassowrdDto;
 import com.xuecheng.ucenter.model.po.XcUser;
+import com.xuecheng.ucenter.service.AuthService;
+import com.xuecheng.ucenter.service.PasswordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +24,8 @@ public class LoginController {
 
     @Resource
     XcUserMapper userMapper;
+    @Resource
+    PasswordService passwordService;
 
 
     @RequestMapping("/login-success")
@@ -65,19 +69,7 @@ public class LoginController {
 
     @PostMapping("/findpassword")
     public void findPassword(@RequestBody FindPassowrdDto findPassowrdDto){
-        //找回密码需要输入的对象，用于修改用户数据库的密码
-        //FindPassowrdDto
-        //1:先判断输入的密码是否一致,且密码不能为空
-        //本身是前端做的校验
-        String password = findPassowrdDto.getPassword();
-        if (password == null && "".equals(password)){
-            //提醒密码不能为空
-            throw new RuntimeException("密码不能为空");
-        }
-        if (!password.equals(findPassowrdDto.getConfirmpwd())){
-            throw new RuntimeException("两次输入的密码不一致");
-        }
-        //查找手机号是否再邮箱中
+        passwordService.findPassword(findPassowrdDto);
     }
 
 }

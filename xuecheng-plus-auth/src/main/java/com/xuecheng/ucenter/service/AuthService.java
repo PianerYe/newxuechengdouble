@@ -1,7 +1,9 @@
 package com.xuecheng.ucenter.service;
 
 import com.xuecheng.ucenter.model.dto.AuthParamsDto;
+import com.xuecheng.ucenter.model.dto.FindPassowrdDto;
 import com.xuecheng.ucenter.model.dto.XcUserExt;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * @author yepianer
@@ -18,5 +20,7 @@ public interface AuthService {
      * @date 2022/9/29 12:11
      */
     XcUserExt execute(AuthParamsDto authParamsDto);
+
+
 
 }
