@@ -102,20 +102,7 @@
             <artifactId>spring-security-core</artifactId>
         </dependency>
     </dependencies>
-        <!-- 其他项目配置 -->
-        <build>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <compilerArgs>
-                            <arg>-Xplugin:com.google.gson:gson:2.8.6</arg>
-                        </compilerArgs>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </build>
+
 
 
 </project>
