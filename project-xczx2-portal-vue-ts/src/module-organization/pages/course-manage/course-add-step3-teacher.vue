@@ -99,6 +99,7 @@ export default class extends mixins(MixinTools) {
   private async handleDelete(data: ICourseTeacherList) {
     try {
       await this.showDeleteConfirm()
+      // @ts-ignore
       await deleteTeacher(this.courseBaseId, data.id)
       await this.getList()
     } catch (error) {}

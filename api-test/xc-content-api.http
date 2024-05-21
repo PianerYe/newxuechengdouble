@@ -122,4 +122,6 @@ Content-Type: application/json
 POST {{content_host}}/content/coursepublish/123
 Content-Type: application/json
 
-
+### 测试课程
+GET {{gateway_host}}/content/course/whole/125
+Content-Type: application/json

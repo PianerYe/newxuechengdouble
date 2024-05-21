@@ -2,7 +2,7 @@
   <div class="step-body">
     <!-- 工具栏 -->
     <div class="bar">
-      <div class="title">任务总数：{{outlineData.length}}</div>
+      <div class="title">任务总数：{{outlineData.teachPlanTreeNodes.length}}</div>
       <el-button size="medium" plain class="el-button" @click="handleAddChapter">+添加章</el-button>
     </div>
 
@@ -210,11 +210,12 @@ export default class extends mixins(MixinTools) {
 
   constructor(props) {
     super(props)
+    // @ts-ignore
     this.outlineData = {
       courseId: this.courseBaseId,
       mediaType: '',
       pname: '',
-      teachPlanTreeNodes: []
+      teachPlanTreeNodes: [],
     }
   }
 
@@ -297,14 +298,15 @@ export default class extends mixins(MixinTools) {
 
   // 添加章
   private async handleAddChapter() {
+    // @ts-ignore
     let node: ICourseOutlineTreeNode = {
       courseId: this.courseBaseId,
       parentid: 0,
       grade: 1,
-      pname: '新章名称 [点击修改]'
+      pname: '新章名称 [点击修改]',
       // mediaType: '',
       // ctlEditTitle: false,
-      // ctlBarShow: false
+      // ctlBarShow: false,
       // teachPlanTreeNodes: []
     }
     await submitOutlineNode(node)
@@ -317,6 +319,7 @@ export default class extends mixins(MixinTools) {
     teachPlanTreeNodes: ICourseOutlineTreeNode[],
     parentid: number
   ) {
+    // @ts-ignore
     let node: ICourseOutlineTreeNode = {
       courseId: this.courseBaseId,
       parentid: parentid,
@@ -451,6 +454,7 @@ export default class extends mixins(MixinTools) {
       await this.showDeleteConfirm()
       await mediaUnAssociation(
         node.teachplanMedia.teachplanId,
+        // @ts-ignore
         node.teachplanMedia.mediaId,
         this.courseBaseId
       )

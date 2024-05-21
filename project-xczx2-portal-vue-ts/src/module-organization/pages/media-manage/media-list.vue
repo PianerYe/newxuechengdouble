@@ -188,11 +188,14 @@ export default class MediaList extends Vue {
    */
 private async handleDownloadMedia(id: number) {
     let res= await previewMedia(id);
+    // @ts-ignore
     if(res&&res.code==0){
+      // @ts-ignore
       window.open(`${process.env.VUE_APP_SERVER_PICSERVER_URL}` +res.result);
     }else{
       this.$message({
       type: 'error',
+        // @ts-ignore
       message: res.errMessage
      })
     }

@@ -11,6 +11,7 @@ export default {
     components: {
     },
     created: function () {
+    // @ts-ignore
       this.$router.push('/organization/course-list')
     }
 }
