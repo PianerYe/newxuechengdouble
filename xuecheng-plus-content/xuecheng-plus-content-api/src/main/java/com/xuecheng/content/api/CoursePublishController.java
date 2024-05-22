@@ -97,7 +97,9 @@ public class CoursePublishController {
         //获取到用户所属机构的id
         Long companyId = 1232141425L;
         //直接通过数据库查询课程发布信息
-        CoursePublish coursePublish = coursePublishService.getCoursePublish(courseId);
+        //走缓存查询课程发布信息
+        CoursePublish coursePublish = coursePublishService.getCoursePublishCache(courseId);
+//        CoursePublish coursePublish = coursePublishService.getCoursePublish(courseId);
         //课程基本信息,营销信息CourseBaseInfoDto
         //课程计划信息List<TeachplanDto> teachplans;
         CoursePreviewDto coursePreviewDto = new CoursePreviewDto();

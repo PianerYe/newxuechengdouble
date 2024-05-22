@@ -26,6 +26,7 @@ import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
@@ -68,6 +69,8 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     MediaServiceClient mediaServiceClient;
     @Resource
     CourseTeacherService courseTeacherService;
+    @Resource
+    RedisTemplate redisTemplate;
 
 
     @Override
@@ -272,6 +275,28 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     public CoursePublish getCoursePublish(Long courseId) {
         CoursePublish coursePublish = coursePublishMapper.selectById(courseId);
         return coursePublish;
+    }
+
+    /**
+     * 根据课程ID查询课程发布信息，走redis缓存
+     * */
+    @Override
+    public CoursePublish getCoursePublishCache(Long courseId) {
+        Object jsonObj = redisTemplate.opsForValue().get("course:" + courseId);
+        if (jsonObj != null){
+            String jsonString = jsonObj.toString();
+            CoursePublish coursePublish = JSON.parseObject(jsonString, CoursePublish.class);
+            return coursePublish;
+        }else {
+            CoursePublish coursePublish = getCoursePublish(courseId);
+            if (coursePublish != null){
+                //序列化
+                String jsonString = JSON.toJSONString(coursePublish);
+                redisTemplate.opsForValue().set("course:" + courseId,jsonString);
+            }
+
+            return coursePublish;
+        }
     }
 
     /**

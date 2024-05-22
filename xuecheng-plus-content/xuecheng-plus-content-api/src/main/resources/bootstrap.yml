@@ -30,3 +30,6 @@ spring:
           - dataId: freemarker-config-dev.yaml
             group: yepianerxuecheng-common
             refresh: true
+          - dataId: redis-${spring.profiles.active}.yaml
+            group: yepianerxuecheng-common
+            refresh: true
