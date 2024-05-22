@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author yepianer
@@ -282,18 +283,26 @@ public class CoursePublishServiceImpl implements CoursePublishService {
      * */
     @Override
     public CoursePublish getCoursePublishCache(Long courseId) {
+        ////查询布隆过滤器，如果是返回0，直接返回
         Object jsonObj = redisTemplate.opsForValue().get("course:" + courseId);
+        if ("null".equals(jsonObj)){
+            return null;
+        }
         if (jsonObj != null){
+            //System.out.println("===========从缓存中查询=========");
+            //缓存中有直接返回数据
             String jsonString = jsonObj.toString();
             CoursePublish coursePublish = JSON.parseObject(jsonString, CoursePublish.class);
             return coursePublish;
         }else {
+            System.out.println("===========查询数据库=========");
             CoursePublish coursePublish = getCoursePublish(courseId);
-            if (coursePublish != null){
+//            if (coursePublish != null){
                 //序列化
                 String jsonString = JSON.toJSONString(coursePublish);
-                redisTemplate.opsForValue().set("course:" + courseId,jsonString);
-            }
+            //设置30秒过期时间
+                redisTemplate.opsForValue().set("course:" + courseId,jsonString,30, TimeUnit.SECONDS);
+//            }
 
             return coursePublish;
         }
