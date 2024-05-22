@@ -282,33 +282,84 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     /**
      * 根据课程ID查询课程发布信息，走redis缓存
      * */
+//    @Override
+//    public CoursePublish getCoursePublishCache(Long courseId) {
+//        ////查询布隆过滤器，如果是返回0，直接返回
+//        Object jsonObj = redisTemplate.opsForValue().get("course:" + courseId);
+//        if ("null".equals(jsonObj)){
+//            return null;
+//        }
+//        if (jsonObj != null){
+//            //System.out.println("===========从缓存中查询=========");
+//            //缓存中有直接返回数据
+//            String jsonString = jsonObj.toString();
+//            CoursePublish coursePublish = JSON.parseObject(jsonString, CoursePublish.class);
+//            return coursePublish;
+//        }else {
+//            System.out.println("===========查询数据库=========");
+//            CoursePublish coursePublish = getCoursePublish(courseId);
+//            //序列化
+//            String jsonString = JSON.toJSONString(coursePublish);
+//            if (coursePublish == null){
+//                redisTemplate.opsForValue().set("course:" + courseId,jsonString,30,TimeUnit.SECONDS);
+//            }else {
+//                //设置30秒过期时间
+//                redisTemplate.opsForValue().set("course:" + courseId,jsonString,3600 + new Random().nextInt(100), TimeUnit.MINUTES);
+//            }
+//
+//            return coursePublish;
+//        }
+//    }
+
+    //使用同步锁解决缓存击穿
+
+    //避免缓存击穿
     @Override
     public CoursePublish getCoursePublishCache(Long courseId) {
-        ////查询布隆过滤器，如果是返回0，直接返回
+
+        //查询布隆过滤器，如果是返回0，直接返回
+
         Object jsonObj = redisTemplate.opsForValue().get("course:" + courseId);
-        if ("null".equals(jsonObj)){
-            return null;
-        }
-        if (jsonObj != null){
-            //System.out.println("===========从缓存中查询=========");
+        if (jsonObj != null) {
+            if ("null".equals(jsonObj)){
+                return null;
+            }
+//            System.out.println("===========从缓存中查询=========");
             //缓存中有直接返回数据
             String jsonString = jsonObj.toString();
             CoursePublish coursePublish = JSON.parseObject(jsonString, CoursePublish.class);
             return coursePublish;
-        }else {
-            System.out.println("===========查询数据库=========");
-            CoursePublish coursePublish = getCoursePublish(courseId);
-//            if (coursePublish != null){
-                //序列化
-                String jsonString = JSON.toJSONString(coursePublish);
-            //设置30秒过期时间
-                redisTemplate.opsForValue().set("course:" + courseId,jsonString,30 + new Random().nextInt(100), TimeUnit.SECONDS);
-//            }
+        } else {
+            synchronized (this){
+                //再次查询一下缓存
+                Object jsonObjOne = redisTemplate.opsForValue().get("course:" + courseId);
+                if (jsonObjOne != null) {
+                    if ("null".equals(jsonObj)){
+                        return null;
+                    }
+                    //缓存中有直接返回数据
+                    String jsonString = jsonObjOne.toString();
+                    CoursePublish coursePublishOne = JSON.parseObject(jsonString, CoursePublish.class);
+                    return coursePublishOne;
+                }
+                //从数据库查询
+                System.out.println("===========查询数据库=========");
+                CoursePublish coursePublish = getCoursePublish(courseId);
+                if (coursePublish == null) {
+                    //查询完成再存储到redis
+                    //设置30秒过期时间
+                    redisTemplate.opsForValue().set("course:" + courseId, JSON.toJSONString(coursePublish),30, TimeUnit.SECONDS);
+                }else {
+                    redisTemplate.opsForValue().set("course:" + courseId, JSON.toJSONString(coursePublish),60*24*7+new Random().nextInt(100), TimeUnit.MINUTES);
+                }
+                return coursePublish;
+            }
 
-            return coursePublish;
         }
-    }
 
+
+
+    }
     /**
      * @deprecated 保存消息记录
      * @param courseId 课程ID
