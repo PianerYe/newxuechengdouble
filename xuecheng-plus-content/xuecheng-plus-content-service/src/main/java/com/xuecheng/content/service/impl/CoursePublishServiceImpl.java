@@ -25,6 +25,8 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -73,6 +75,8 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     CourseTeacherService courseTeacherService;
     @Resource
     RedisTemplate redisTemplate;
+    @Resource
+    RedissonClient redissonClient;
 
 
     @Override
@@ -314,48 +318,102 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     //使用同步锁解决缓存击穿
 
     //避免缓存击穿
-    @Override
-    public CoursePublish getCoursePublishCache(Long courseId) {
+//    @Override
+//    public CoursePublish getCoursePublishCache(Long courseId) {
+//
+//        //查询布隆过滤器，如果是返回0，直接返回
+//
+//        Object jsonObj = redisTemplate.opsForValue().get("course:" + courseId);
+//        if (jsonObj != null) {
+//            if ("null".equals(jsonObj)){
+//                return null;
+//            }
+////            System.out.println("===========从缓存中查询=========");
+//            //缓存中有直接返回数据
+//            String jsonString = jsonObj.toString();
+//            CoursePublish coursePublish = JSON.parseObject(jsonString, CoursePublish.class);
+//            return coursePublish;
+//        } else {
+//            synchronized (this){
+//                //再次查询一下缓存
+//                Object jsonObjOne = redisTemplate.opsForValue().get("course:" + courseId);
+//                if (jsonObjOne != null) {
+//                    if ("null".equals(jsonObj)){
+//                        return null;
+//                    }
+//                    //缓存中有直接返回数据
+//                    String jsonString = jsonObjOne.toString();
+//                    CoursePublish coursePublishOne = JSON.parseObject(jsonString, CoursePublish.class);
+//                    return coursePublishOne;
+//                }
+//                //从数据库查询
+//                System.out.println("===========查询数据库=========");
+//                CoursePublish coursePublish = getCoursePublish(courseId);
+//                if (coursePublish == null) {
+//                    //查询完成再存储到redis
+//                    //设置30秒过期时间
+//                    redisTemplate.opsForValue().set("course:" + courseId, JSON.toJSONString(coursePublish),30, TimeUnit.SECONDS);
+//                }else {
+//                    redisTemplate.opsForValue().set("course:" + courseId, JSON.toJSONString(coursePublish),60*24*7+new Random().nextInt(100), TimeUnit.MINUTES);
+//                }
+//                return coursePublish;
+//            }
+//
+//        }
 
-        //查询布隆过滤器，如果是返回0，直接返回
+        //使用redisson实现分布式锁
+        @Override
+        public CoursePublish getCoursePublishCache(Long courseId) {
 
-        Object jsonObj = redisTemplate.opsForValue().get("course:" + courseId);
-        if (jsonObj != null) {
-            if ("null".equals(jsonObj)){
-                return null;
-            }
+            //查询布隆过滤器，如果是返回0，直接返回
+
+            Object jsonObj = redisTemplate.opsForValue().get("course:" + courseId);
+            if (jsonObj != null) {
+                if ("null".equals(jsonObj)){
+                    return null;
+                }
 //            System.out.println("===========从缓存中查询=========");
-            //缓存中有直接返回数据
-            String jsonString = jsonObj.toString();
-            CoursePublish coursePublish = JSON.parseObject(jsonString, CoursePublish.class);
-            return coursePublish;
-        } else {
-            synchronized (this){
-                //再次查询一下缓存
-                Object jsonObjOne = redisTemplate.opsForValue().get("course:" + courseId);
-                if (jsonObjOne != null) {
-                    if ("null".equals(jsonObj)){
-                        return null;
-                    }
-                    //缓存中有直接返回数据
-                    String jsonString = jsonObjOne.toString();
-                    CoursePublish coursePublishOne = JSON.parseObject(jsonString, CoursePublish.class);
-                    return coursePublishOne;
-                }
-                //从数据库查询
-                System.out.println("===========查询数据库=========");
-                CoursePublish coursePublish = getCoursePublish(courseId);
-                if (coursePublish == null) {
-                    //查询完成再存储到redis
-                    //设置30秒过期时间
-                    redisTemplate.opsForValue().set("course:" + courseId, JSON.toJSONString(coursePublish),30, TimeUnit.SECONDS);
-                }else {
-                    redisTemplate.opsForValue().set("course:" + courseId, JSON.toJSONString(coursePublish),60*24*7+new Random().nextInt(100), TimeUnit.MINUTES);
-                }
+                //缓存中有直接返回数据
+                String jsonString = jsonObj.toString();
+                CoursePublish coursePublish = JSON.parseObject(jsonString, CoursePublish.class);
                 return coursePublish;
+            } else {
+                RLock lock = redissonClient.getLock("coursequerylock:" + courseId);
+                //获取分布式锁
+                lock.lock();
+                try {
+                    //再次查询一下缓存
+                    Object jsonObjOne = redisTemplate.opsForValue().get("course:" + courseId);
+                    if (jsonObjOne != null) {
+                        if ("null".equals(jsonObj)){
+                            return null;
+                        }
+                        //缓存中有直接返回数据
+                        String jsonString = jsonObjOne.toString();
+                        CoursePublish coursePublishOne = JSON.parseObject(jsonString, CoursePublish.class);
+                        return coursePublishOne;
+                    }
+                    //从数据库查询
+                    System.out.println("===========查询数据库=========");
+                    //测试，部署之后需要注释。测试锁的续期功能
+//                    try {
+//                        Thread.sleep(60000);
+//                    } catch (InterruptedException e) {
+//                        throw new RuntimeException(e);
+//                    }
+                    CoursePublish coursePublish = getCoursePublish(courseId);
+                    if (coursePublish == null) {
+                        //查询完成再存储到redis
+                        //设置30秒过期时间
+                        redisTemplate.opsForValue().set("course:" + courseId, JSON.toJSONString(coursePublish),30, TimeUnit.SECONDS);
+                    }else {
+                        redisTemplate.opsForValue().set("course:" + courseId, JSON.toJSONString(coursePublish),60*24*7+new Random().nextInt(100), TimeUnit.MINUTES);
+                    }
+                    return coursePublish;
+                } finally {
+                    lock.unlock();
+                }
             }
-
-        }
 
 
 
